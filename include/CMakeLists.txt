@@ -1,0 +1,1 @@
+target_include_directories(House-Saver PRIVATE $(CMAKE_CURRENT_LIST_DIR))

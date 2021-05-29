@@ -1,0 +1,1 @@
+target_sources(House-Saver PRIVATE "main.cpp")
