@@ -1,0 +1,251 @@
+@startuml
+
+class GameController {
+public:
+    GameController();
+    void Run();
+
+private:
+    std::vector<std::unique_ptr<Window>> m_screens;
+    enum ScreenType_t m_currentScreen;
+}
+
+abstract class Window {
+public:
+    Window();
+    virtual enum ScreenType_t display(sf::RenderWindow &) = 0;
+    virtual void draw(sf::RenderWindow &) = 0;
+    virtual void Music() = 0;
+
+private:
+}
+
+class MainMenu{
+public:
+    virtual enum ScreenType_t display(sf::RenderWindow &) override;
+    virtual void draw(sf::RenderWindow &) override;
+    virtual void Music() override;
+private:
+    std::vector<Button> m_menu;
+    void handleMouseMove(sf::RenderWindow & Window, const sf::Vector2f & location);
+}
+
+class Stage{
+public:
+    virtual enum ScreenType_t display(sf::RenderWindow &) override;
+    virtual void draw(sf::RenderWindow &) override;
+    virtual void Music() override;
+private:
+    m_lastHouse;
+    std::vector<std::unique_ptr<Home>> m_homes;
+}
+
+class StageDetails{
+public:
+    void draw(sf::RenderWindow &, const Player &);
+
+private:
+    int m_stageNumber;
+}
+
+class Button{
+    void draw(sf::RenderWindow &);
+    bool checkPressed(const sf::Vector2f &);
+    void setOutlineThickness(int);
+
+private:
+    sf::Text m_text;
+    sf::RectangleShape m_frame;
+}
+
+class Home{
+public:
+
+private:
+    Player m_player;
+    std::vector<unique_ptr<Room>> m_rooms;
+}
+
+class Room{
+public:
+
+private:
+    std::vector<unique_ptr<Enemy>> m_enemies;
+    std::vector<unique_ptr<Mission>> m_mission;
+    std::vector<unique_ptr<Furniture>> m_furniture;
+}
+
+abstract class GameObject{
+public:
+    const sf::Vector2i & getPosition () const;
+    virtual void draw (sf::RenderWindow &) const;
+    void setPosition(const float &, const sf::Vector2f & , const sf::Vector2f &);
+    bool checkCollision(const GameObject &);
+
+    virtual void handleCollision(const GameObject &);
+
+private:
+    sf::Sprite m_sprite;
+    sf::Vector2i m_position;
+}
+
+Abstract class MovingObject{
+public:
+    virtual void move(const float &) = 0;
+    virtual void setDirection(const sf::Keyboard::Key &);
+    const sf::Vector2f getDirection () const;
+    const sf::Vector2f getScale () const;
+
+
+private:
+    sf::Vector2f m_direction;
+    sf::Vector2f m_scale; //used to reflect the sprite with setScale.
+}
+
+abstract class StaticObject{}
+
+abstract class SpecialObject{
+public:
+    virtual void activate() = 0;
+}
+
+class Furniture{}
+
+
+class Player{
+public:
+    virtual void move(const float &) override;
+private:
+    std::Pair<int, int> m_lives;
+    Weapon m_weapon;
+    std::Vector<std::unique_ptr<Bullet>>;
+}
+
+note bottom
+"m_live -> First = lives, Second = HP"
+end note
+
+abstract class Enemy{
+public:
+private:
+    int m_hp;
+}
+
+class ShootEnemy{
+public:
+    virtual void move(const float &) override;
+private:
+    int m_lives;
+    Weapon m_weapon;
+    std::Vector<std::unique_ptr<Bullet>>;
+}
+
+class KnightEnemy{
+public:
+    virtual void move(const float &) override;
+private:
+    int m_lives;
+}
+
+class Mission{}
+
+abstract class Weapon{
+public:
+
+private:
+    int m_damageRate;
+}
+
+class Sword{
+public:
+    void swing();
+private:
+}
+
+class Gun{
+public:
+    void fire();
+    void reload();
+
+private:
+    float m_fireRate;
+}
+
+class Bullet{}
+
+abstract class Gift{}
+
+abstract class GoodGift{}
+
+abstract class BadGift{}
+
+class AmmoGift{
+public:
+    virtual void activate();
+private:
+}
+
+class LiveGift{
+public:
+    virtual void activate();
+private:
+}
+
+class SpeedGift{
+public:
+    virtual void activate();
+private:
+}
+
+class RandomGift{
+public:
+    virtual void activate();
+private:
+}
+
+abstract class Singleton{}
+
+class Sounds{}
+
+class Textures{}
+
+class Font{}
+
+class File{}
+
+enum ScreenType_t
+{
+MAIN_MENU,
+STAGE,
+SCORE_BOARD,
+EXIT
+}
+
+Window <-- MainMenu
+Window <-- Stage
+GameObject <-- MovingObject
+GameObject <-- StaticObject
+MovingObject <-- Player
+MovingObject <-- Enemy
+MovingObject <-- Bullet
+StaticObject <-- Furniture
+StaticObject <-- SpecialObject
+StaticObject <-- Weapon
+SpecialObject <-- Mission
+SpecialObject <-- Gift
+Enemy <-- KnightEnemy
+Enemy <-- ShootEnemy
+Weapon <-- Sword
+Weapon <-- Gun
+Gift <-- GoodGift
+Gift <-- BadGift
+Gift <-- RandomGift
+GoodGift <-- AmmoGift
+GoodGift <-- LiveGift
+GoodGift <-- SpeedGift
+Singleton <-- Sounds
+Singleton <-- Textures
+Singleton <-- Font
+
+
+@enduml
