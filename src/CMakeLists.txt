@@ -1,1 +1,15 @@
-target_sources(House-Saver PRIVATE "main.cpp")
+target_sources(House-Saver PRIVATE "main.cpp"
+        "Font.cpp"
+        "Sounds.cpp"
+        "Textures.cpp"
+        "Animation.cpp"
+        "HousesFile.cpp"
+        "GameController.cpp"
+        "MainMenu.cpp"
+        "GamePlay.cpp"
+        "House.cpp"
+        "GameObject.cpp"
+        "StaticObject.cpp"
+        "MovingObject.cpp"
+        "Player.cpp"
+        "Wall.cpp")
