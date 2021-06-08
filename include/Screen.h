@@ -6,7 +6,7 @@
 
 #include "Macros.h"
 #include "Textures.h"
-#include "Sound.h"
+#include "Sounds.h"
 #include "Font.h"
 
 class Screen {
