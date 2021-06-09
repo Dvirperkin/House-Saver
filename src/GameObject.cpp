@@ -32,7 +32,7 @@ void GameObject::rigidBody(b2World & world, const b2Vec2 & pos, const b2Vec2 & d
     else {
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.density = 1.0f;
+        fixtureDef.density = 1.f;
         fixtureDef.friction = 0.3f;
 
         m_body->CreateFixture(&fixtureDef);

@@ -4,10 +4,10 @@
 #include "Animation.h"
 #include "Direction.h"
 
-class Player : public MovingObject{
+class Player : public MovingObject {
 public:
 
-    Player(const sf::Vector2f & pos, b2World &);
+    Player(const sf::Vector2f& pos, b2World&);
     void move();
     void update(sf::Time);
 
