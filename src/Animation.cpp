@@ -2,18 +2,16 @@
 
 const auto AnimationTime = sf::seconds(0.1f);
 
-Animation::Animation(const AnimationData& data, Direction dir, sf::Sprite& sprite)
-    : m_data(data), m_dir(dir), m_sprite(sprite)
-{
-    m_sprite.setOrigin(0, 0);
+Animation::Animation(const AnimationData& data, AnimationStatus_t status, sf::Sprite& sprite) :
+                    m_data(data), m_status(status), m_sprite(sprite){
     update();
 }
 
-void Animation::direction(Direction dir)
+void Animation::setStatus(AnimationStatus_t status)
 {
-    if (m_dir != dir)
+    if (m_status != status)
         m_index = 0;
-    m_dir = dir;
+    m_status = status;
     update();
 }
 
@@ -24,14 +22,14 @@ void Animation::update(sf::Time delta)
     {
         m_elapsed -= AnimationTime;
         ++m_index;
-        m_index %= m_data.m_data.find(m_dir)->second.size();
+        m_index %= m_data.m_data.find(m_status)->second.size();
         update();
     }
 }
 
 void Animation::update()
 {
-    m_sprite.setTextureRect(m_data.m_data.find(m_dir)->second[m_index]);
+    m_sprite.setTextureRect(m_data.m_data.find(m_status)->second[m_index]);
 
     m_sprite.setScale(HOUSE_SIZE.first / (m_sprite.getTextureRect().width * HOUSE_OBJECT_CAPACITY.first),
         HOUSE_SIZE.second / (m_sprite.getTextureRect().height * HOUSE_OBJECT_CAPACITY.second));

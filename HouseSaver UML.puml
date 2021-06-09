@@ -10,7 +10,7 @@ private:
     enum ScreenType_t m_currentScreen;
 }
 
-abstract class Window {
+abstract class Screen {
 public:
     Window();
     virtual enum ScreenType_t display(sf::RenderWindow &) = 0;
@@ -30,13 +30,14 @@ private:
     void handleMouseMove(sf::RenderWindow & Window, const sf::Vector2f & location);
 }
 
-class Stage{
+class GamePlay{
 public:
     virtual enum ScreenType_t display(sf::RenderWindow &) override;
     virtual void draw(sf::RenderWindow &) override;
     virtual void Music() override;
 private:
-    m_lastHouse;
+    size_t m_lastHouse;
+    sf::Clock m_clock;
     std::vector<std::unique_ptr<Home>> m_homes;
 }
 
@@ -58,20 +59,22 @@ private:
     sf::RectangleShape m_frame;
 }
 
-class Home{
+class House{
 public:
 
 private:
-    Player m_player;
-    std::vector<unique_ptr<Room>> m_rooms;
+    b2World m_world;
+    std::unique_ptr<Player> m_player;
+    std::vector<unique_ptr<Enemy>> m_enemies;
+    std::vector<std::vector<std::unique_ptr<StaticObject>>> m_staticObjects;
 }
 
 class Room{
 public:
 
 private:
+    std::unique_ptr<Mission> m_mission;
     std::vector<unique_ptr<Enemy>> m_enemies;
-    std::vector<unique_ptr<Mission>> m_mission;
     std::vector<unique_ptr<Furniture>> m_furniture;
 }
 
@@ -84,9 +87,14 @@ public:
 
     virtual void handleCollision(const GameObject &);
 
-private:
+protected:
+    b2Body * m_body;
     sf::Sprite m_sprite;
-    sf::Vector2i m_position;
+
+private:
+
+    sf::Vector2f m_pos;
+    std::unique_ptr<Animation> m_animation;
 }
 
 Abstract class MovingObject{
@@ -102,7 +110,14 @@ private:
     sf::Vector2f m_scale; //used to reflect the sprite with setScale.
 }
 
-abstract class StaticObject{}
+abstract class StaticObject{
+public:
+    //----------Constructors\Destructors Section----------
+    StaticObject(const sf::Sprite & sprite, const sf::Vector2f & pos, b2World &,
+                 std::unique_ptr<Animation> = nullptr);
+private:
+    b2BodyDef m_bodyDef;
+}
 
 abstract class SpecialObject{
 public:
@@ -114,7 +129,8 @@ class Furniture{}
 
 class Player{
 public:
-    virtual void move(const float &) override;
+    Player(const sf::Vector2f& pos, b2World&);
+    AnimationStatus move();
 private:
     std::Pair<int, int> m_lives;
     Weapon m_weapon;
@@ -203,33 +219,120 @@ public:
 private:
 }
 
-abstract class Singleton{}
+class Sounds{
+public:
+static Sounds & soundObject();
+    void playSound(enum Sounds_t);
+    void stopSound(enum Sounds_t);
+    bool checkSoundPlay(enum Sounds_t);
 
-class Sounds{}
+private:
+    //--------------------Constructor/Destructor Section--------------------
+    Sounds();
+    Sounds(const Sounds &) = default;
+    Sounds & operator=(const Sounds &) = default;
 
-class Textures{}
 
-class Font{}
+    std::vector<sf::SoundBuffer> m_soundBuffer;
+    std::vector<sf::Sound> m_sounds;
+}
 
-class File{}
+class Textures{
+public:
+
+    static Textures & texturesObject();
+
+    //--------------------Get Function Section--------------------
+    const sf::Texture & getTexture(enum Textures_t);
+    const sf::Sprite getSprite(enum Textures_t);
+    const AnimationData & animationData(ObjectsData_t objectsData) {return m_animationsData[objectsData];}
+
+private:
+    std::vector<sf::Texture> m_textures;
+    std::vector<AnimationData> m_animationsData;
+
+    //--------------------Constructor/Destructor Section--------------------
+    Textures();
+    Textures(const Textures &) = default;
+    Textures& operator=(const Textures &) = default;
+}
+
+class Font {
+public:
+    //--------------------Constructor/Destructor Section--------------------
+    static Font& FontObject();
+
+    //--------------------Get Function Section--------------------
+    const sf::Font & getFont () const;
+
+private:
+    sf::Font m_font;
+
+    //--------------------Constructor/Destructor Section--------------------
+    Font();
+    Font(const Font &) = default;
+    Font& operator=(const Font &) = default;
+};
+
+class HousesFile {
+public:
+    HousesFile(const std::string &);
+
+    std::string readLine();
+    std::pair<constIterToVecStr ,constIterToVecStr> getHouse();
+    bool eof() const;
+
+private:
+    int m_currLine;
+    std::vector<std::string> m_fileContent;
+};
 
 enum ScreenType_t
 {
 MAIN_MENU,
-STAGE,
-SCORE_BOARD,
+GAME_PLAY,
 EXIT
 }
 
-Window <-- MainMenu
-Window <-- Stage
+enum Objects_t
+{
+PLAYER = 'P',
+ENEMY = 'E',
+WALL = '#',
+BOX = 'B',
+DOOR = 'D',
+KEY= 'K'
+}
+
+enum ObjectsData_t
+{
+PLAYER_D,
+KEY_D,
+ENEMY_D
+}
+
+enum Textures_t
+{
+PLAYER_T = 0,
+WALL_T,
+KEY_T,
+ENEMY_T,
+BOX_T,
+DOOR_T
+}
+enum Sounds_t
+{
+}
+
+Screen <-- MainMenu
+Screen <-- GamePlay
 GameObject <-- MovingObject
 GameObject <-- StaticObject
+GameObject <-- SpecialObject
 MovingObject <-- Player
 MovingObject <-- Enemy
 MovingObject <-- Bullet
 StaticObject <-- Furniture
-StaticObject <-- SpecialObject
 StaticObject <-- Weapon
 SpecialObject <-- Mission
 SpecialObject <-- Gift
@@ -243,9 +346,5 @@ Gift <-- RandomGift
 GoodGift <-- AmmoGift
 GoodGift <-- LiveGift
 GoodGift <-- SpeedGift
-Singleton <-- Sounds
-Singleton <-- Textures
-Singleton <-- Font
-
 
 @enduml

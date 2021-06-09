@@ -2,10 +2,9 @@
 
 #include "StaticObject.h"
 
-class Wall : public StaticObject{
+class Key : public StaticObject {
 public:
     //----------Constructors\Destructors Section----------
-    Wall(const sf::Vector2f & pos, b2World & world);
-
+    Key(const sf::Vector2f& , b2World& );
 private:
 };

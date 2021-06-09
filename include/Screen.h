@@ -15,6 +15,5 @@ public:
     virtual enum ScreenType_t display(sf::RenderWindow &) = 0;
     virtual void draw(sf::RenderWindow &) = 0;
 
-
 private:
 };

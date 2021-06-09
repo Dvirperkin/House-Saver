@@ -511,10 +511,10 @@ void b2Distance(b2DistanceOutput* output,
 			break;
 		}
 
-		// Get search direction.
+		// Get search setStatus.
 		b2Vec2 d = simplex.GetSearchDirection();
 
-		// Ensure the search direction is numerically fit.
+		// Ensure the search setStatus is numerically fit.
 		if (d.LengthSquared() < b2_epsilon * b2_epsilon)
 		{
 			// The origin is probably contained by a line segment
@@ -628,7 +628,7 @@ bool b2ShapeCast(b2ShapeCastOutput * output, const b2ShapeCastInput * input)
 	// Get simplex vertices as an array.
 	b2SimplexVertex* vertices = &simplex.m_v1;
 
-	// Get support point in -r direction
+	// Get support point in -r setStatus
 	int32 indexA = proxyA->GetSupport(b2MulT(xfA.q, -r));
 	b2Vec2 wA = b2Mul(xfA, proxyA->GetVertex(indexA));
 	int32 indexB = proxyB->GetSupport(b2MulT(xfB.q, r));
@@ -648,7 +648,7 @@ bool b2ShapeCast(b2ShapeCastOutput * output, const b2ShapeCastInput * input)
 
         output->iterations += 1;
 
-		// Support in direction -v (A - B)
+		// Support in setStatus -v (A - B)
 		indexA = proxyA->GetSupport(b2MulT(xfA.q, -v));
 		wA = b2Mul(xfA, proxyA->GetVertex(indexA));
 		indexB = proxyB->GetSupport(b2MulT(xfB.q, v));
@@ -715,7 +715,7 @@ bool b2ShapeCast(b2ShapeCastOutput * output, const b2ShapeCastInput * input)
 			return false;
 		}
 
-		// Get search direction.
+		// Get search setStatus.
 		v = simplex.GetClosestPoint();
 
 		// Iteration count is equated to the number of support point calls.

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Audio.hpp>
-#include <memory>
 
 #include "Macros.h"
 

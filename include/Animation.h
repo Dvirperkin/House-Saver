@@ -3,14 +3,13 @@
 #include <SFML/Graphics.hpp>
 
 #include "AnimationData.h"
-#include "Direction.h"
 #include "Textures.h"
 
 class Animation
 {
 public:
-    Animation(const AnimationData& data, Direction dir, sf::Sprite& sprite);
-    void direction(Direction dir);
+    Animation(const AnimationData& data, AnimationStatus_t dir, sf::Sprite& sprite);
+    void setStatus(AnimationStatus_t dir);
     void update(sf::Time delta);
 
 private:
@@ -18,7 +17,7 @@ private:
 
     const AnimationData& m_data;
     sf::Time m_elapsed = {};
-    Direction m_dir = Direction::Idle;
+    AnimationStatus_t m_status = AnimationStatus_t::Idle;
     int m_index = 0;
     sf::Sprite& m_sprite;
 };

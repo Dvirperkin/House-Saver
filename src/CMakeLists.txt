@@ -12,4 +12,5 @@ target_sources(House-Saver PRIVATE "main.cpp"
         "StaticObject.cpp"
         "MovingObject.cpp"
         "Player.cpp"
-        "Wall.cpp")
+        "Wall.cpp"
+        "Key.cpp")

@@ -41,10 +41,10 @@ struct b2DistanceProxy
     /// must remain in scope while the proxy is in use.
     void Set(const b2Vec2* vertices, int32 count, float radius);
 
-	/// Get the supporting vertex index in the given direction.
+	/// Get the supporting vertex index in the given setStatus.
 	int32 GetSupport(const b2Vec2& d) const;
 
-	/// Get the supporting vertex in the given direction.
+	/// Get the supporting vertex in the given setStatus.
 	const b2Vec2& GetSupportVertex(const b2Vec2& d) const;
 
 	/// Get the vertex count.

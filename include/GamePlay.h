@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include "HousesFile.h"
-#include "Macros.h"
 #include "Screen.h"
 #include "House.h"
 
@@ -14,7 +13,8 @@ public:
     void draw(sf::RenderWindow &) override;
 
 private:
-    int m_lastHouse;
+    size_t m_lastHouse;
+    sf::Clock m_clock;
     HousesFile m_houseFile;
     std::vector<std::unique_ptr<House>> m_house;
 

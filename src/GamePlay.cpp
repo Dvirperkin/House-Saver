@@ -14,12 +14,14 @@ void GamePlay::buildHouses() {
 }
 //=============================================================================
 enum ScreenType_t GamePlay::display(sf::RenderWindow & window) {
+
     m_house[m_lastHouse]->runHouse(window);
-    return PLAY;
+    draw(window);
+    return GAME_PLAY;
 }
 //=============================================================================
 void GamePlay::draw(sf::RenderWindow & window) {
-    m_house[m_lastHouse]->draw(window);
+    m_house[m_lastHouse]->draw(window, m_clock.restart());
 }
 //=============================================================================
 

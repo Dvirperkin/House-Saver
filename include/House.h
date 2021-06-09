@@ -1,10 +1,11 @@
 #pragma once
 
 #include <memory>
-#include "StaticObject.h"
+
 #include "Macros.h"
-#include "Wall.h"
 #include "Player.h"
+#include "Wall.h"
+#include "Key.h"
 
 using constIterToVecStr = std::vector<std::string>::const_iterator;
 
@@ -14,8 +15,8 @@ public:
           const constIterToVecStr &);
 
     void runHouse(sf::RenderWindow &);
-
-    void draw(sf::RenderWindow &);
+    void changeView(sf::RenderWindow &);
+    void draw(sf::RenderWindow &, const sf::Time &);
 private:
     b2World m_world;
     std::unique_ptr<Player> m_player;
