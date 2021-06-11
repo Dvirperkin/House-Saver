@@ -1,8 +1,10 @@
 #include "House.h"
 
 House::House(const constIterToVecStr& begin,
-    const constIterToVecStr& end) : m_world({ 0.0f, 100.f }) {
+    const constIterToVecStr& end) : m_world({ 0.0f, 9.8f }) {
     buildHouse(begin, end);
+
+    m_world.SetContactListener(&m_contactListener);
 }
 //=============================================================================
 void House::buildHouse(const constIterToVecStr& begin,
@@ -17,12 +19,29 @@ void House::buildHouse(const constIterToVecStr& begin,
             case PLAYER:
                 m_player = std::make_unique<Player>(sf::Vector2f(j, i), m_world);
                 break;
-            case ENEMY: break;
-            case KEY: m_staticObjects[i].emplace_back(std::make_unique<Key>(sf::Vector2f(j, i), m_world)); break;
-            case WALL: m_staticObjects[i].emplace_back(std::make_unique<Wall>(sf::Vector2f(j, i), m_world)); break;
-            case DOOR: break;
-            case BOX: break;
-            default: m_staticObjects[i].emplace_back(nullptr);
+
+            case ENEMY:
+                break;
+
+            case KEY:
+                m_takenObjects.emplace_back(std::make_unique<Key>(sf::Vector2f(j, i), m_world));
+                m_staticObjects[i].emplace_back(nullptr);
+                break;
+
+            case WALL:
+                m_staticObjects[i].emplace_back(std::make_unique<Wall>(sf::Vector2f(j, i), m_world));
+                break;
+
+            case DOOR:
+
+                break;
+
+            case BOX:
+                m_staticObjects[i].emplace_back(std::make_unique<Box>(sf::Vector2f(j, i), m_world));
+                break;
+
+            default:
+                m_staticObjects[i].emplace_back(nullptr);
             }
         }
     }
@@ -38,7 +57,7 @@ void House::runHouse(sf::RenderWindow& window) {
 //=============================================================================
 void House::changeView(sf::RenderWindow & window) {
     auto view = window.getView();
-    view.setSize(600,400);
+    view.setSize((HOUSE_SIZE.first / HOUSE_OBJECT_CAPACITY.first) * 12, (HOUSE_SIZE.second / HOUSE_OBJECT_CAPACITY.second) * 8);
 
     auto position = sf::Vector2f();
 
@@ -68,6 +87,15 @@ void House::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
                 staticObject->update(deltaTime);
             }
         }
+    }
+
+    for(size_t i = 0; i < m_takenObjects.size(); ++i) {
+        if (!m_takenObjects[i]->isTaken()) {
+            m_takenObjects[i]->draw(window);
+            m_takenObjects[i]->update(deltaTime);
+        }
+        else
+            m_takenObjects.erase(m_takenObjects.begin() + i);
     }
 
     m_player->draw(window);

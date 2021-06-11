@@ -9,7 +9,8 @@
 class GameObject {
 public:
     //----------Constructors\Destructors Section----------
-    GameObject(const sf::Sprite &, const sf::Vector2f &, std::unique_ptr<Animation> = nullptr);
+    GameObject(const sf::Sprite &, const sf::Vector2f &, b2World &, std::unique_ptr<Animation> = nullptr);
+    virtual ~GameObject() {m_world.DestroyBody(m_body);};
 
     void draw(sf::RenderWindow & window){window.draw(m_sprite);}
 
@@ -25,9 +26,13 @@ public:
 
     b2Vec2 getBodyLinearVelocity() const {return m_body->GetLinearVelocity();};
 
+    virtual Objects_t getBodyType() const = 0;
+
     void setRotation();
 
     void setPos(const sf::Vector2f &);
+
+    void setUserData() {m_body->SetUserData(this);}
 
     void setFixedRotation(bool status) {m_body->SetFixedRotation(status);};
 
@@ -39,7 +44,7 @@ protected:
     sf::Sprite m_sprite;
 
 private:
-
+    b2World & m_world;
     sf::Vector2f m_pos;
     std::unique_ptr<Animation> m_animation;
 };

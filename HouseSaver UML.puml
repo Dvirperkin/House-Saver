@@ -119,13 +119,32 @@ private:
     b2BodyDef m_bodyDef;
 }
 
-abstract class SpecialObject{
+class TakenObject{
+public:
+    TakenObject(const sf::Sprite &sprite , const sf::Vector2f &pos, b2World & world, b2BodyType,
+                std::unique_ptr<Animation> animation);
+
+    bool isTaken() const {return m_taken;}
+    void take() {m_taken = true;}
+
+private:
+    bool m_taken = false;
+};
+
+abstract class TakenObject{
 public:
     virtual void activate() = 0;
 }
 
 class Furniture{}
 
+class Box{
+public:
+    Box(const sf::Vector2f &, b2World &);
+
+    Objects_t getBodyType() const override {return BOX;}
+private:
+};
 
 class Player{
 public:
@@ -169,7 +188,7 @@ abstract class Weapon{
 public:
 
 private:
-    int m_damageRate;
+    int m_fireRate;
 }
 
 class Sword{
@@ -187,7 +206,21 @@ private:
     float m_fireRate;
 }
 
-class Bullet{}
+class Bullet{
+public:
+
+private:
+    int m_damageRate;
+}
+
+class Key{
+public:
+    //----------Constructors\Destructors Section----------
+    Key(const sf::Vector2f& , b2World&);
+    Objects_t getBodyType() const override {return KEY;}
+
+private:
+};
 
 abstract class Gift{}
 
@@ -320,6 +353,7 @@ ENEMY_T,
 BOX_T,
 DOOR_T
 }
+
 enum Sounds_t
 {
 }
@@ -328,14 +362,14 @@ Screen <-- MainMenu
 Screen <-- GamePlay
 GameObject <-- MovingObject
 GameObject <-- StaticObject
-GameObject <-- SpecialObject
 MovingObject <-- Player
 MovingObject <-- Enemy
 MovingObject <-- Bullet
+StaticObject <-- TakenObject
 StaticObject <-- Furniture
 StaticObject <-- Weapon
-SpecialObject <-- Mission
-SpecialObject <-- Gift
+TakenObject <-- Gift
+TakenObject <-- Key
 Enemy <-- KnightEnemy
 Enemy <-- ShootEnemy
 Weapon <-- Sword

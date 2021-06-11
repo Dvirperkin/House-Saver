@@ -27,11 +27,15 @@ void Animation::update(sf::Time delta)
     }
 }
 
-void Animation::update()
-{
+void Animation::update(){
     m_sprite.setTextureRect(m_data.m_data.find(m_status)->second[m_index]);
 
-    m_sprite.setScale(HOUSE_SIZE.first / (m_sprite.getTextureRect().width * HOUSE_OBJECT_CAPACITY.first),
-        HOUSE_SIZE.second / (m_sprite.getTextureRect().height * HOUSE_OBJECT_CAPACITY.second));
+    auto scale = m_sprite.getScale().x;
 
+    m_sprite.setScale(HOUSE_SIZE.first / (m_sprite.getLocalBounds().width * HOUSE_OBJECT_CAPACITY.first),
+                      HOUSE_SIZE.second / (m_sprite.getLocalBounds().height * HOUSE_OBJECT_CAPACITY.second));
+    if(scale < 0)
+        m_sprite.scale(-1,1);
+
+    m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
 }
