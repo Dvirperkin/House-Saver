@@ -7,22 +7,28 @@ Animation::Animation(const AnimationData& data, AnimationStatus_t status, sf::Sp
     update();
 }
 
-void Animation::setStatus(AnimationStatus_t status)
-{
+void Animation::setStatus(AnimationStatus_t status){
     if (m_status != status)
         m_index = 0;
     m_status = status;
     update();
 }
 
-void Animation::update(sf::Time delta)
-{
+void Animation::update(sf::Time delta){
     m_elapsed += delta;
+
+
     if (m_elapsed >= AnimationTime)
     {
         m_elapsed -= AnimationTime;
         ++m_index;
-        m_index %= m_data.m_data.find(m_status)->second.size();
+
+        if(m_status == AnimationStatus_t::Jump || m_status == AnimationStatus_t::Falling){
+            if(m_index == m_data.m_data.find(m_status)->second.size())
+                --m_index;
+        }
+        else
+            m_index %= m_data.m_data.find(m_status)->second.size();
         update();
     }
 }

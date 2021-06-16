@@ -4,9 +4,51 @@ namespace {
     AnimationData playerData() {
         auto player = AnimationData{};
 
+        player.m_data[AnimationStatus_t::Idle].emplace_back(55, 80, 361, 476);
+        player.m_data[AnimationStatus_t::Idle].emplace_back(542, 80, 351, 476);
+        player.m_data[AnimationStatus_t::Idle].emplace_back(58, 605, 363, 476);
+        player.m_data[AnimationStatus_t::Idle].emplace_back(535, 606, 351, 476);
 
-        /**/
-        player.m_data[AnimationStatus_t::Idle].emplace_back(20,232,51,81);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(1110, 50, 360, 450);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(1572, 50, 421, 456);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(2174, 59, 409, 470);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(1108, 554, 365, 480);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(1602, 560, 397, 465);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(2150, 563, 403, 500);
+
+        /*player.m_data[AnimationStatus_t::Melee].emplace_back(2739, 50, 350, 466);
+        player.m_data[AnimationStatus_t::Melee].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Melee].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Melee].emplace_back(,,,);
+
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);*/
+
+        player.m_data[AnimationStatus_t::Jump].emplace_back(1126, 1298, 344, 365);
+        player.m_data[AnimationStatus_t::Jump].emplace_back(1474, 1258, 283, 406);
+        player.m_data[AnimationStatus_t::Jump].emplace_back(1802, 1218, 312, 376);
+
+        player.m_data[AnimationStatus_t::Falling].emplace_back(1106, 1690, 295, 374);
+        player.m_data[AnimationStatus_t::Falling].emplace_back(1411, 1723, 324, 336);
+        player.m_data[AnimationStatus_t::Falling].emplace_back(1760, 1850, 300, 356);
+
+        /*player.m_data[AnimationStatus_t::Hurt].emplace_back(,,,);
+
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
+        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);*/
+
+
+
+        /*player.m_data[AnimationStatus_t::Idle].emplace_back(20,232,51,81);
 
         player.m_data[AnimationStatus_t::Walk].emplace_back(10,18,56,84);
         player.m_data[AnimationStatus_t::Walk].emplace_back(84,18,62,84);
@@ -16,7 +58,7 @@ namespace {
         player.m_data[AnimationStatus_t::Jump].emplace_back(318,18,52,82);
         //player.m_data[AnimationStatus_t::Jump].emplace_back(385,19,55,78);
 
-        player.m_data[AnimationStatus_t::Falling].emplace_back(462,19,56,83);
+        player.m_data[AnimationStatus_t::Falling].emplace_back(462,19,56,83);*/
 
 
         return player;
@@ -37,6 +79,7 @@ namespace {
 
         return key;
     }
+
     AnimationData enemyData() {
         auto enemy = AnimationData{};
 
@@ -46,6 +89,14 @@ namespace {
 
         return enemy;
 
+    }
+
+    AnimationData bulletData() {
+        auto bullet = AnimationData{};
+
+        bullet.m_data[AnimationStatus_t::Idle].emplace_back(229, 410, 702, 176);
+
+        return bullet;
     }
 }
 //===========================
@@ -68,9 +119,13 @@ Textures::Textures() {
     if (!m_textures[ENEMY_T].loadFromFile("Enemy.png")) {
         throw std::runtime_error("Can't load file");
     }
+    if (!m_textures[BULLET_T].loadFromFile("Bullet.png")) {
+        throw std::runtime_error("Can't load file");
+    }
     m_animationsData[PLAYER_D] = playerData();
     m_animationsData[ENEMY_D] = enemyData();
     m_animationsData[KEY_D] = keyData();
+    m_animationsData[BULLET_D] = bulletData();
 }
 //=============================================================================
 Textures& Textures::texturesObject() {

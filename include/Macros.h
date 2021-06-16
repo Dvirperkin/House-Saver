@@ -5,17 +5,17 @@
 //--------------------Enum Section--------------------
 enum ScreenType_t {MAIN_MENU, GAME_PLAY, EXIT};
 enum Objects_t {PLAYER = 'P', ENEMY = 'E', WALL = '#', BOX = 'B', DOOR = 'D', KEY= 'K'};
-enum ObjectsData_t {PLAYER_D, KEY_D, ENEMY_D};
-enum Textures_t {PLAYER_T = 0, WALL_T, BOX_T, KEY_T, ENEMY_T, DOOR_T};
+enum ObjectsData_t {PLAYER_D, KEY_D, ENEMY_D, BULLET_D};
+enum Textures_t {PLAYER_T = 0, WALL_T, BOX_T, KEY_T, ENEMY_T, BULLET_T, DOOR_T};
 enum Sounds_t {};
-enum class AnimationStatus_t{Idle, Run, Walk, Shoot, Hurt1, Hurt2, Jump, Death, Slide, Falling};
+enum class AnimationStatus_t{Idle, Walk, Shoot, Melee, Hurt, Jump, Death, Slide, Falling};
 enum class Side_t{RIGHT, LEFT};
 
 //--------------------Int Section--------------------
 const std::pair<int,int> HOUSE_SIZE = {1000, 1000};
 const std::pair<int,int> HOUSE_OBJECT_CAPACITY = {30, 20};
-const int NUM_OF_TEXTURES = 5;
-const int NUM_OF_ANIMATION = 3;
+const int NUM_OF_TEXTURES = 6;
+const int NUM_OF_ANIMATION = 4;
 const int VELOCITY_ITERATIONS = 6;
 const int POSITION_ITERATIONS = 2;
 

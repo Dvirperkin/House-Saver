@@ -4,7 +4,7 @@
 
 class MovingObject : public GameObject {
 public:
-    MovingObject(const sf::Sprite& sprite, const sf::Vector2f& pos, b2World &,
+    MovingObject(const sf::Sprite&, const sf::Vector2f&, b2World &,
                  std::unique_ptr<Animation>);
 
     void moveX(float = 0, float = 0);
