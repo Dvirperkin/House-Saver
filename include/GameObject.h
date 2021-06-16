@@ -14,7 +14,7 @@ public:
 
     void draw(sf::RenderWindow & window){window.draw(m_sprite);}
 
-    void rigidBody(b2World &, const b2Vec2 &,  const b2Vec2 &, const b2BodyType & = b2_staticBody);
+    void rigidBody(b2World &, const b2Vec2 &,const b2FixtureDef &, const b2BodyType = b2_staticBody);
 
     void update(sf::Time deltaTime);
 
