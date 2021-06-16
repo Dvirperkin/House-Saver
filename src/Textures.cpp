@@ -2,22 +2,10 @@
 
 namespace {
     AnimationData playerData() {
-        const auto middleSpace = sf::Vector2i(1, 0);
-
         auto player = AnimationData{};
-        auto currentStart = sf::Vector2i(6, 7);
-        auto currentStart2 = sf::Vector2i(-6, 8);
 
-        auto nextStart = [&](sf::Vector2i movementSize, sf::Vector2i middleSpace) {
-            currentStart += middleSpace;
-            currentStart.x += movementSize.x;
-            return currentStart;
-        };
-        auto nextMovement = [&]() {
-            currentStart.y += 47;
-            currentStart.x = 0;
-        };
 
+        /**/
         player.m_data[AnimationStatus_t::Idle].emplace_back(20,232,51,81);
 
         player.m_data[AnimationStatus_t::Walk].emplace_back(10,18,56,84);
@@ -26,80 +14,38 @@ namespace {
         player.m_data[AnimationStatus_t::Walk].emplace_back(239,18,55,84);
 
         player.m_data[AnimationStatus_t::Jump].emplace_back(318,18,52,82);
-        player.m_data[AnimationStatus_t::Jump].emplace_back(385,19,55,78);
-        player.m_data[AnimationStatus_t::Jump].emplace_back(462,19,56,83);
+        //player.m_data[AnimationStatus_t::Jump].emplace_back(385,19,55,78);
+
+        player.m_data[AnimationStatus_t::Falling].emplace_back(462,19,56,83);
 
 
-        //player.m_data[AnimationStatus_t::Reload].emplace_back(20,232,51,81);
-        //player.m_data[AnimationStatus_t::Reload].emplace_back(101,232,48,81);
-
-
-        /*player.m_data[AnimationStatus_t::Idle].emplace_back(6,7,32,39);
-        player.m_data[AnimationStatus_t::Idle].emplace_back(45,7,33,39);
-        player.m_data[AnimationStatus_t::Idle].emplace_back(85,7,32,39);
-        player.m_data[AnimationStatus_t::Idle].emplace_back(127,7,33,39);
-        player.m_data[AnimationStatus_t::Idle].emplace_back(165,7,32,39);
-        player.m_data[AnimationStatus_t::Idle].emplace_back(205,7,32,39);
-
-        nextMovement();
-
-        player.m_data[AnimationStatus_t::Walk].emplace_back(currentStart2, WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(nextStart(WALK_SIZE, middleSpace), WALK_SIZE);
-
-        nextMovement();
-        player.m_data[AnimationStatus_t::Jump].emplace_back(currentStart, JUMP_SIZE);
-        player.m_data[AnimationStatus_t::Jump].emplace_back(nextStart(JUMP_SIZE, middleSpace), JUMP_SIZE);
-        player.m_data[AnimationStatus_t::Jump].emplace_back(nextStart(JUMP_SIZE, middleSpace), JUMP_SIZE);
-        player.m_data[AnimationStatus_t::Jump].emplace_back(nextStart(JUMP_SIZE, middleSpace), JUMP_SIZE);
-
-
-        /*
-        nextMovement();
-        player.m_data[AnimationStatus_t::Run].emplace_back(currentStart, RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        player.m_data[AnimationStatus_t::Run].emplace_back(nextStart(RUN_SIZE, sf::Vector2i(1, 0)), RUN_SIZE);
-        */
         return player;
     }
 
     AnimationData keyData() {
-        const auto middleSpace = sf::Vector2i(0, 0);
-
         auto key = AnimationData{};
-        auto currentStart = sf::Vector2i(0, 0);
 
-        auto nextStart = [&](sf::Vector2i movementSize, sf::Vector2i middleSpace) {
-            currentStart += middleSpace;
-            currentStart.x += movementSize.x;
-            return currentStart;
-        };
-
-        key.m_data[AnimationStatus_t::Idle].emplace_back(currentStart, KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
-        key.m_data[AnimationStatus_t::Idle].emplace_back(nextStart(KEY_SIZE, middleSpace), KEY_SIZE);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(12, 19, 124, 240);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(152, 19, 122, 239);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(301, 19, 97, 236);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(430, 20, 100, 236);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(567, 22, 114, 234);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(706, 22, 126, 235);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(863, 21, 98, 236);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(987, 21, 100, 239);
+        key.m_data[AnimationStatus_t::Idle].emplace_back(1121, 18, 122, 239);
 
         return key;
+    }
+    AnimationData enemyData() {
+        auto enemy = AnimationData{};
+
+        enemy.m_data[AnimationStatus_t::Idle].emplace_back(33, 4, 811, 562);
+
+        enemy.m_data[AnimationStatus_t::Walk].emplace_back(33,4,811, 562);
+
+        return enemy;
+
     }
 }
 //===========================
@@ -119,7 +65,11 @@ Textures::Textures() {
     if (!m_textures[KEY_T].loadFromFile("Key.png")) {
         throw std::runtime_error("Can't load file");
     }
+    if (!m_textures[ENEMY_T].loadFromFile("Enemy.png")) {
+        throw std::runtime_error("Can't load file");
+    }
     m_animationsData[PLAYER_D] = playerData();
+    m_animationsData[ENEMY_D] = enemyData();
     m_animationsData[KEY_D] = keyData();
 }
 //=============================================================================

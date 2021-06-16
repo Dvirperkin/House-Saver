@@ -5,6 +5,7 @@ House::House(const constIterToVecStr& begin,
     buildHouse(begin, end);
 
     m_world.SetContactListener(&m_contactListener);
+    
 }
 //=============================================================================
 void House::buildHouse(const constIterToVecStr& begin,
@@ -21,6 +22,7 @@ void House::buildHouse(const constIterToVecStr& begin,
                 break;
 
             case ENEMY:
+                m_enemy.emplace_back(std::make_unique<KnightEnemy>(sf::Vector2f(j, i), m_world));
                 break;
 
             case KEY:
@@ -51,6 +53,9 @@ void House::runHouse(sf::RenderWindow& window) {
 
     m_world.Step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     auto movement = m_player->move();
+    for (auto& enemy : m_enemy) {
+        enemy->move();
+    }
     changeView(window);
 
 }
@@ -80,6 +85,14 @@ void House::changeView(sf::RenderWindow & window) {
 }
 //=============================================================================
 void House::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
+    for (size_t i = 0; i < m_takenObjects.size(); ++i) {
+        if (!m_takenObjects[i]->isTaken()) {
+            m_takenObjects[i]->draw(window);
+            m_takenObjects[i]->update(deltaTime);
+        }
+        else
+            m_takenObjects.erase(m_takenObjects.begin() + i);
+    }
     for (auto& staticObjectLine : m_staticObjects) {
         for (auto& staticObject : staticObjectLine) {
             if (staticObject) {
@@ -89,15 +102,11 @@ void House::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
         }
     }
 
-    for(size_t i = 0; i < m_takenObjects.size(); ++i) {
-        if (!m_takenObjects[i]->isTaken()) {
-            m_takenObjects[i]->draw(window);
-            m_takenObjects[i]->update(deltaTime);
-        }
-        else
-            m_takenObjects.erase(m_takenObjects.begin() + i);
+    
+    for (auto& enemy : m_enemy) {
+        enemy->draw(window);
+        enemy->update(deltaTime);
     }
-
     m_player->draw(window);
     m_player->update(deltaTime);
 }

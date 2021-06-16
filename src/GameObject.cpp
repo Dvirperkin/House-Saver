@@ -20,28 +20,14 @@ void GameObject::setPos(const sf::Vector2f & pos) {
     m_pos = pos;
 }
 //=============================================================================
-void GameObject::rigidBody(b2World & world, const b2Vec2 & pos, const b2Vec2 & dimensions,
-                           const b2BodyType & bodyType) {
+void GameObject::rigidBody(b2World & world, const b2Vec2 & pos,
+                            const b2FixtureDef & fixtureDef, const b2BodyType bodyType) {
     b2BodyDef bodyDef;
     bodyDef.type = bodyType;
     bodyDef.position.Set(pos.x, pos.y);
-    bodyDef.bullet = false;
     m_body = world.CreateBody(&bodyDef);
+    m_body->CreateFixture(&fixtureDef);
 
-    b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(dimensions.x, dimensions.y);
-
-    if(bodyType == b2_staticBody)
-        m_body->CreateFixture(&polygonShape, 0.0f);
-
-    else {
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &polygonShape;
-        fixtureDef.density = 1.f;
-        fixtureDef.friction = 0.3f;
-
-        m_body->CreateFixture(&fixtureDef);
-    }
 }
 //=============================================================================
 void GameObject::setRotation() {
