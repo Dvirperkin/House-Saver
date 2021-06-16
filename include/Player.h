@@ -15,4 +15,5 @@ public:
 
 private:
     unsigned int m_keys = 0;
+    AnimationStatus_t m_movement = AnimationStatus_t::Idle;
 };
