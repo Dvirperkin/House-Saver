@@ -5,6 +5,8 @@
 #include "Weapon.h"
 #include "Bullet.h"
 
+// A class that represents a player.
+
 class Player : public MovingObject {
 public:
 
@@ -19,6 +21,8 @@ public:
     void startContact(Enemy*);
 
 private:
+    static bool m_registerIt;
+
     Side_t m_side = Side_t::RIGHT;
     float m_hp = 100;
     unsigned int m_keys = 0;

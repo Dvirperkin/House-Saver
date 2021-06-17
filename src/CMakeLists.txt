@@ -1,6 +1,7 @@
 target_sources(House-Saver PRIVATE "main.cpp"
         "Font.cpp"
         "Sounds.cpp"
+        "Factory.cpp"
         "Textures.cpp"
         "Animation.cpp"
         "HousesFile.cpp"

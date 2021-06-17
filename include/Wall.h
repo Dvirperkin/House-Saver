@@ -2,6 +2,8 @@
 
 #include "StaticObject.h"
 
+// A class that represents a wall object.
+
 class Wall : public StaticObject{
 public:
     //----------Constructors\Destructors Section----------
@@ -9,4 +11,5 @@ public:
 
     Objects_t getBodyType() const override {return WALL;}
 private:
+    static bool m_registerIt;
 };

@@ -1,6 +1,14 @@
 #include "Player.h"
-#include <iostream>
 #include "Enemy.h"
+#include "Factory.h"
+
+// Registers the Player object to the objects factory.
+
+bool Player::m_registerIt = Factory::registerObject('P', [](const sf::Vector2f &pos,
+                                                                b2World &world) -> std::unique_ptr<GameObject> {
+    return std::make_unique<Player>(pos, world);
+});
+//=========================================================================================
 Player::Player(const sf::Vector2f& pos, b2World& world) :
     MovingObject(Textures::texturesObject().getSprite(PLAYER_T), pos, world,
                  std::make_unique<Animation>(Textures::texturesObject().animationData(PLAYER_D),
@@ -23,27 +31,35 @@ Player::Player(const sf::Vector2f& pos, b2World& world) :
 }
 //=========================================================================================
 AnimationStatus_t Player::move() {
+
+    // Player Jump.
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         && m_movement != AnimationStatus_t::Jump && m_movement != AnimationStatus_t::Falling) {
         moveY(0, -DESIREDVEL);
     }
+    // Player walk left.
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 
         moveX(-DESIREDVEL, 0);
         m_side = opposite(Side_t::LEFT);
     }
+    // Player walk right.
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         moveX(DESIREDVEL, 0);
         m_side = opposite(Side_t::RIGHT);
     }
+    // Player stands still.
     else {
         moveX(0, 0);
         m_movement = AnimationStatus_t::Idle;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+    // The player fires.
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) {
         m_weapon.shoot(getPos(), *m_body->GetWorld(), m_side);
         m_movement = AnimationStatus_t::Shoot;
     }
+
+    // Changes sprite according to the player situation.
     if (m_body->GetLinearVelocity().y < 0)
         m_movement = AnimationStatus_t::Jump;
     else if (m_body->GetLinearVelocity().y > 0)
@@ -77,7 +93,6 @@ bool Player::isDead()
 void Player::startContact(Key* key) {
     ++m_keys;
     key->take();
-    std::cout << m_keys << std::endl;
 }
 //=========================================================================================
 void Player::startContact(Enemy* enemy) {
@@ -85,3 +100,4 @@ void Player::startContact(Enemy* enemy) {
     moveY(0, 3);
 
 }
+//=========================================================================================
