@@ -13,8 +13,12 @@ public:
     void setDirection(const b2Vec2&);
     b2Vec2 getDirection()const;
     void startContact(Player*);
-
+    void startContact(Bullet*);
+    float getHit()const { return m_hit; }
+    bool isDead();
 private:
+    float m_hp;
+    float m_hit=5;
     b2Vec2 m_dir;
     AnimationStatus_t m_movement = AnimationStatus_t::Idle;
 };

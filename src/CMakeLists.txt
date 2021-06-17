@@ -19,4 +19,5 @@ target_sources(House-Saver PRIVATE "main.cpp"
         "Key.cpp"
         "Enemy.cpp"
         "KnightEnemy.cpp"
+        "Weapon.cpp"
         "Bullet.cpp")

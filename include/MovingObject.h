@@ -5,11 +5,11 @@
 class MovingObject : public GameObject {
 public:
     MovingObject(const sf::Sprite&, const sf::Vector2f&, b2World &,
-                 std::unique_ptr<Animation>);
+                 std::unique_ptr<Animation> = nullptr);
 
     void moveX(float = 0, float = 0);
     void moveY(float = 0, float = 0);
-    virtual void opposite(enum Side_t side);
+    virtual Side_t opposite(enum Side_t side);
 
 private:
     enum Side_t m_side = Side_t::RIGHT;

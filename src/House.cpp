@@ -52,9 +52,18 @@ void House::buildHouse(const constIterToVecStr& begin,
 void House::runHouse(sf::RenderWindow& window) {
 
     m_world.Step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-    auto movement = m_player->move();
-    for (auto& enemy : m_enemy) {
-        enemy->move();
+    if (!m_player->isDead())
+        auto movement = m_player->move();
+    else
+        std::cout << "Player Dead\n";
+
+    for (auto i = 0; i < m_enemy.size() ;i++) {
+        if (!m_enemy[i]->isDead())
+            m_enemy[i]->move();
+        else {
+            m_enemy.erase(m_enemy.begin() + i);
+            --i;
+        }
     }
     changeView(window);
 
@@ -109,5 +118,6 @@ void House::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
     }
     m_player->draw(window);
     m_player->update(deltaTime);
+    m_player->drawBullet(window, deltaTime);
 }
 //=============================================================================

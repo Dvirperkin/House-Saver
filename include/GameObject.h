@@ -18,7 +18,8 @@ public:
 
     void update(sf::Time deltaTime);
 
-    sf::Vector2f getPos() const {return m_pos;}
+    sf::Vector2f getPos() const {return m_sprite.getPosition();}
+    sf::FloatRect getGlobalBounds() const {return m_sprite.getGlobalBounds();}
 
     b2Vec2 getBodyPos() const {return m_body->GetPosition();}
 

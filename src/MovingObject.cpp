@@ -20,11 +20,12 @@ void MovingObject::moveY(float desiredVelX, float desiredVelY) {
     m_body->ApplyLinearImpulse(b2Vec2(0, impulseY), m_body->GetWorldCenter(), true);
 }
 //=============================================================================
-void MovingObject::opposite(enum Side_t side) {
+Side_t MovingObject::opposite(enum Side_t side) {
     if(side != m_side) {
         m_sprite.scale(-1, 1);
         m_side = side;
     }
+    return m_side;
 }
 //=============================================================================
 

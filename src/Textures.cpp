@@ -34,6 +34,10 @@ namespace {
         player.m_data[AnimationStatus_t::Falling].emplace_back(1411, 1723, 324, 336);
         player.m_data[AnimationStatus_t::Falling].emplace_back(1760, 1850, 300, 356);
 
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(52, 1258, 446, 482);
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(539, 1260, 474, 482);
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(59, 1784, 465, 480);
+        player.m_data[AnimationStatus_t::Shoot].emplace_back(535, 1788, 455, 480);
         /*player.m_data[AnimationStatus_t::Hurt].emplace_back(,,,);
 
         player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
@@ -96,6 +100,7 @@ namespace {
 
         bullet.m_data[AnimationStatus_t::Idle].emplace_back(229, 410, 702, 176);
 
+
         return bullet;
     }
 }
@@ -125,7 +130,6 @@ Textures::Textures() {
     m_animationsData[PLAYER_D] = playerData();
     m_animationsData[ENEMY_D] = enemyData();
     m_animationsData[KEY_D] = keyData();
-    m_animationsData[BULLET_D] = bulletData();
 }
 //=============================================================================
 Textures& Textures::texturesObject() {

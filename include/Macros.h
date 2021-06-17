@@ -4,7 +4,7 @@
 
 //--------------------Enum Section--------------------
 enum ScreenType_t {MAIN_MENU, GAME_PLAY, EXIT};
-enum Objects_t {PLAYER = 'P', ENEMY = 'E', WALL = '#', BOX = 'B', DOOR = 'D', KEY= 'K'};
+enum Objects_t {PLAYER = 'P', ENEMY = 'E', WALL = '#', BOX = 'B', DOOR = 'D', KEY= 'K', BULLET ='*'};
 enum ObjectsData_t {PLAYER_D, KEY_D, ENEMY_D, BULLET_D};
 enum Textures_t {PLAYER_T = 0, WALL_T, BOX_T, KEY_T, ENEMY_T, BULLET_T, DOOR_T};
 enum Sounds_t {};
@@ -41,3 +41,9 @@ const auto DEATH_SIZE = sf::Vector2i(40, 24);
 
 //--------------------Key Sprite Sheet Section--------------------
 const auto KEY_SIZE = sf::Vector2i(30, 50);
+
+const float DESIREDVEL = 5.f;
+const float BULLET_DISTANCE = 0.7f;
+const float START_BULLET_DAMAGE = 100.f;
+const float START_FIRE_RATE = 0.4f;
+const sf::Vector2f ANTI_GRAVITY(0, -0.15f);

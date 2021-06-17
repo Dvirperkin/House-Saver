@@ -2,7 +2,7 @@
 Enemy::Enemy(const sf::Vector2f& pos, b2World& world) :
     MovingObject(Textures::texturesObject().getSprite(ENEMY_T), pos, world,
         std::make_unique<Animation>(Textures::texturesObject().animationData(ENEMY_D),
-            AnimationStatus_t::Idle, m_sprite)),m_dir(0,0) {
+            AnimationStatus_t::Idle, m_sprite)),m_dir(0,0) ,m_hp(300){
     b2Vec2 position(pos.x, pos.y);
 
     b2CircleShape circleShape;
@@ -55,5 +55,18 @@ b2Vec2 Enemy::getDirection() const
 //=========================================================================================
 void Enemy::startContact(Player* player) {
 
+}
+//=========================================================================================
+void Enemy::startContact(Bullet* bullet)
+{
+    m_body->ApplyForceToCenter({ 5,0 }, true);
+    m_hp -= bullet->getHit();
+    bullet->hit();
+}
+//=========================================================================================
+bool Enemy::isDead() {
+    if (m_hp <= 0)
+        return true;
+    return false;
 }
 //=========================================================================================
