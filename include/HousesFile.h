@@ -3,20 +3,24 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "Macros.h"
 
-using constIterToVecStr = std::vector<std::string>::const_iterator;
+// A class that represents a read-only file that manages all readings
+// from the houses file according to the required protocol.
 
 class HousesFile {
 public:
     HousesFile(const std::string &);
-
-    std::string readLine();
-    std::pair<constIterToVecStr ,constIterToVecStr> getHouse();
+    std::pair<buildingDec, buildingsDec> getHouse();
     bool eof() const;
 
 private:
-    int m_currLine;
-    std::vector<std::string> m_fileContent;
+
+    int m_currHouse;
+    std::vector<building> m_houses;
+    std::vector<std::vector<building>> m_rooms;
+
+    void readBuilding(std::fstream &, enum Building_t, int = 0);
 };

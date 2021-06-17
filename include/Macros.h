@@ -2,6 +2,15 @@
 
 #include <SFML/Graphics.hpp>
 
+//--------------------Using Section--------------------
+using building = std::vector<std::string>;
+
+using buildingDec = std::pair<building::const_iterator,
+                building::const_iterator>;
+
+using buildingsDec = std::pair<std::vector<building>::const_iterator,
+        std::vector<building>::const_iterator>;
+
 //--------------------Enum Section--------------------
 enum ScreenType_t {MAIN_MENU, GAME_PLAY, EXIT};
 enum Objects_t {PLAYER = 'P', ENEMY = 'E', WALL = '#', BOX = 'B', DOOR = 'D', KEY= 'K', BULLET ='*'};
@@ -10,9 +19,10 @@ enum Textures_t {PLAYER_T = 0, WALL_T, BOX_T, KEY_T, ENEMY_T, BULLET_T, DOOR_T};
 enum Sounds_t {};
 enum class AnimationStatus_t{Idle, Walk, Shoot, Melee, Hurt, Jump, Death, Slide, Falling};
 enum class Side_t{RIGHT, LEFT};
+enum class Building_t{HOUSE, ROOM};
 
 //--------------------Int Section--------------------
-const std::pair<int,int> HOUSE_SIZE = {1000, 1000};
+const std::pair<int,int> WINDOW_SIZE = {1000, 1000};
 const std::pair<int,int> HOUSE_OBJECT_CAPACITY = {30, 20};
 const int NUM_OF_TEXTURES = 6;
 const int NUM_OF_ANIMATION = 4;
@@ -47,3 +57,4 @@ const float BULLET_DISTANCE = 0.7f;
 const float START_BULLET_DAMAGE = 100.f;
 const float START_FIRE_RATE = 0.4f;
 const sf::Vector2f ANTI_GRAVITY(0, -0.15f);
+const float HIT_MOVE = 9;
