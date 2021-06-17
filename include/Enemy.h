@@ -18,7 +18,8 @@ public:
     bool isDead();
 private:
     float m_hp;
-    float m_hit=5;
+    float m_hit = 5;
+    bool m_hitted;
     b2Vec2 m_dir;
     AnimationStatus_t m_movement = AnimationStatus_t::Idle;
 };

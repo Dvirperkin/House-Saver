@@ -13,8 +13,8 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world,const Side_t& sideToSho
         to_add -= getGlobalBounds().width / 2;
         opposite(Side_t::LEFT);
     }
-    auto objectPosition = sf::Vector2f{ ((pos.x + to_add) * HOUSE_OBJECT_CAPACITY.first - getGlobalBounds().width / 2) / HOUSE_SIZE.first,
-                        ((pos.y - getGlobalBounds().height/4) * HOUSE_OBJECT_CAPACITY.second - getGlobalBounds().height / 2) / HOUSE_SIZE.second };
+    auto objectPosition = sf::Vector2f{ ((pos.x + to_add) * HOUSE_OBJECT_CAPACITY.first - getGlobalBounds().width / 2) / WINDOW_SIZE.first,
+                        ((pos.y - getGlobalBounds().height/4) * HOUSE_OBJECT_CAPACITY.second - getGlobalBounds().height / 2) / WINDOW_SIZE.second };
     setPos(objectPosition);
     b2Vec2 position(objectPosition.x, objectPosition.y);
     m_sprite.setScale(m_sprite.getScale().x / 3, m_sprite.getScale().y / 5);
@@ -35,8 +35,7 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world,const Side_t& sideToSho
     m_clock.restart();
 }
 //=========================================================================================
-bool Bullet::shoot()
-{
+bool Bullet::shoot(){
     sf::Time deltaTime;
     deltaTime = m_clock.getElapsedTime();
     if (deltaTime.asSeconds() >= BULLET_DISTANCE) {m_disposed = true;}
@@ -44,5 +43,4 @@ bool Bullet::shoot()
     moveY(ANTI_GRAVITY.x, ANTI_GRAVITY.y);
     return m_disposed;
 }
-
-
+//=========================================================================================

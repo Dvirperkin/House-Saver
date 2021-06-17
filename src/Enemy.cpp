@@ -1,13 +1,16 @@
 #include "Enemy.h"
+
+//=============================================================================
 Enemy::Enemy(const sf::Vector2f& pos, b2World& world) :
     MovingObject(Textures::texturesObject().getSprite(ENEMY_T), pos, world,
         std::make_unique<Animation>(Textures::texturesObject().animationData(ENEMY_D),
             AnimationStatus_t::Idle, m_sprite)),m_dir(0,0) ,m_hp(300){
+
     b2Vec2 position(pos.x, pos.y);
 
     b2CircleShape circleShape;
     circleShape.m_radius = 0.48 - b2_polygonRadius;
-    
+
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 2.f;
@@ -22,7 +25,13 @@ Enemy::Enemy(const sf::Vector2f& pos, b2World& world) :
 //=========================================================================================
 AnimationStatus_t Enemy::move() {
 
-    if (m_dir.y < 0){
+    if (m_hitted) {
+        moveX(HIT_MOVE, 0);
+        moveY(0, HIT_MOVE);
+        m_hitted = false;
+    }
+
+    else if (m_dir.y < 0){
         moveY(0, m_dir.y);
     }
     else if (m_dir.x < 0 ) {      
@@ -44,12 +53,11 @@ AnimationStatus_t Enemy::move() {
     return m_movement;
 }
 //=========================================================================================
-void Enemy::setDirection(const b2Vec2 & dir)
-{
+void Enemy::setDirection(const b2Vec2 & dir){
     m_dir = dir;
 }
-b2Vec2 Enemy::getDirection() const
-{
+//=========================================================================================
+b2Vec2 Enemy::getDirection() const{
     return m_dir;
 }
 //=========================================================================================
@@ -57,9 +65,8 @@ void Enemy::startContact(Player* player) {
 
 }
 //=========================================================================================
-void Enemy::startContact(Bullet* bullet)
-{
-    m_body->ApplyForceToCenter({ 5,0 }, true);
+void Enemy::startContact(Bullet* bullet){
+    m_hitted = true;
     m_hp -= bullet->getHit();
     bullet->hit();
 }

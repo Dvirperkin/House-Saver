@@ -4,13 +4,13 @@ GameObject::GameObject(const sf::Sprite & sprite, const sf::Vector2f & pos, b2Wo
                        std::unique_ptr<Animation> animation) :
                        m_body(nullptr), m_sprite(sprite), m_world(world), m_pos(pos){
 
-    m_sprite.setScale(HOUSE_SIZE.first / (m_sprite.getGlobalBounds().width * HOUSE_OBJECT_CAPACITY.first),
-                      HOUSE_SIZE.second / (m_sprite.getGlobalBounds().height * HOUSE_OBJECT_CAPACITY.second));
+    m_sprite.setScale(WINDOW_SIZE.first / (m_sprite.getGlobalBounds().width * HOUSE_OBJECT_CAPACITY.first),
+                      WINDOW_SIZE.second / (m_sprite.getGlobalBounds().height * HOUSE_OBJECT_CAPACITY.second));
 
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
 
-    m_sprite.setPosition(m_pos.x * HOUSE_SIZE.first / HOUSE_OBJECT_CAPACITY.first + m_sprite.getGlobalBounds().width / 2,
-                         m_pos.y * HOUSE_SIZE.second / HOUSE_OBJECT_CAPACITY.second + m_sprite.getGlobalBounds().height / 2);
+    m_sprite.setPosition(m_pos.x * WINDOW_SIZE.first / HOUSE_OBJECT_CAPACITY.first + m_sprite.getGlobalBounds().width / 2,
+                         m_pos.y * WINDOW_SIZE.second / HOUSE_OBJECT_CAPACITY.second + m_sprite.getGlobalBounds().height / 2);
 
     m_animation = std::move(animation);
 }
@@ -39,8 +39,8 @@ void GameObject::update(sf::Time deltaTime) {
         m_animation->update(deltaTime);
 
     auto position = getBodyPos();
-    position.x *= HOUSE_SIZE.first / HOUSE_OBJECT_CAPACITY.first;
-    position.y *= HOUSE_SIZE.second / HOUSE_OBJECT_CAPACITY.second;
+    position.x *= WINDOW_SIZE.first / HOUSE_OBJECT_CAPACITY.first;
+    position.y *= WINDOW_SIZE.second / HOUSE_OBJECT_CAPACITY.second;
     position.x += m_sprite.getGlobalBounds().width / 2;
     position.y += m_sprite.getGlobalBounds().height / 2;
     setPos({ position.x, position.y});

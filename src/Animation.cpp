@@ -38,8 +38,8 @@ void Animation::update(){
 
     auto scale = m_sprite.getScale().x;
 
-    m_sprite.setScale(HOUSE_SIZE.first / (m_sprite.getLocalBounds().width * HOUSE_OBJECT_CAPACITY.first),
-                      HOUSE_SIZE.second / (m_sprite.getLocalBounds().height * HOUSE_OBJECT_CAPACITY.second));
+    m_sprite.setScale(WINDOW_SIZE.first / (m_sprite.getLocalBounds().width * HOUSE_OBJECT_CAPACITY.first),
+                      WINDOW_SIZE.second / (m_sprite.getLocalBounds().height * HOUSE_OBJECT_CAPACITY.second));
     if(scale < 0)
         m_sprite.scale(-1,1);
 
