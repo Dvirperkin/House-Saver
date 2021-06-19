@@ -12,3 +12,11 @@ void House::buildRoom(const buildingDec & room){
     m_rooms.emplace_back(std::make_unique<Room>(room));
 }
 //=============================================================================
+void House::runBuilding(sf::RenderWindow &window) {
+    if(m_inRoom){
+
+    }
+    else
+        Building::runBuilding(window);
+}
+//=============================================================================

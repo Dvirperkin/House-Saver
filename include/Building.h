@@ -19,15 +19,20 @@ public:
     void draw(sf::RenderWindow& window, const sf::Time & deltaTime);
 
 protected:
-    b2World m_world;
+
 
 private:
+    int m_height;
+    int m_width;
+    b2World m_world;
     ContactListener m_contactListener;
-    std::unique_ptr<Player> m_player;
-    std::vector<std::unique_ptr<Enemy>> m_enemy;
-    std::vector<std::unique_ptr<TakenObject>> m_takenObjects;
-    std::vector<std::vector<std::unique_ptr<StaticObject>>> m_staticObjects;
+    std::shared_ptr<Player> m_player;
+    std::vector<std::shared_ptr<Enemy>> m_enemy;
+    std::vector<std::shared_ptr<Elevator>> m_elevators;
+    std::vector<std::shared_ptr<TakenObject>> m_takenObjects;
+    std::vector<std::vector<std::shared_ptr<StaticObject>>> m_staticObjects;
 
+    void createElevator(sf::Vector2f);
     void moveMovingObject();
     void changeView(sf::RenderWindow & window);
 };

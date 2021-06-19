@@ -15,6 +15,11 @@ GameObject::GameObject(const sf::Sprite & sprite, const sf::Vector2f & pos, b2Wo
     m_animation = std::move(animation);
 }
 //=============================================================================
+GameObject::~GameObject() {
+    m_body->SetUserData(nullptr);
+    m_world.DestroyBody(m_body);
+}
+//=============================================================================
 void GameObject::setPos(const sf::Vector2f & pos) {
     m_sprite.setPosition(pos);
     m_pos = pos;

@@ -17,13 +17,13 @@ void Animation::setStatus(AnimationStatus_t status){
 void Animation::update(sf::Time delta){
     m_elapsed += delta;
 
-
     if (m_elapsed >= AnimationTime)
     {
         m_elapsed -= AnimationTime;
         ++m_index;
 
-        if(m_status == AnimationStatus_t::Jump || m_status == AnimationStatus_t::Falling){
+        if(m_status == AnimationStatus_t::Jump || m_status == AnimationStatus_t::Falling ||
+            m_status == AnimationStatus_t::Open || m_status == AnimationStatus_t::Close){
             if(m_index == m_data.m_data.find(m_status)->second.size())
                 --m_index;
         }

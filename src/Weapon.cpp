@@ -19,8 +19,7 @@ void Weapon::setBulletDamage(const float & bulletDamage)
     m_bulletDamage = bulletDamage;
 }
 //===============================================================
-void Weapon::bulletCheck()
-{
+void Weapon::bulletCheck(){
    for (size_t i = 0; i < m_bullets.size(); i++) {
        if (m_bullets[i]->shoot()) {
             m_bullets.erase(m_bullets.begin());

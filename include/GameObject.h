@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "box2d/box2d.h"
 #include "Animation.h"
@@ -10,7 +11,7 @@ class GameObject {
 public:
     //----------Constructors\Destructors Section----------
     GameObject(const sf::Sprite &, const sf::Vector2f &, b2World &, std::unique_ptr<Animation> = nullptr);
-    virtual ~GameObject() {m_world.DestroyBody(m_body);};
+    virtual ~GameObject();
 
     void draw(sf::RenderWindow & window){window.draw(m_sprite);}
 
@@ -33,6 +34,8 @@ public:
 
     void setPos(const sf::Vector2f &);
 
+    void setBodyPos(b2Vec2 pos) {m_body->SetTransform(pos, m_body->GetAngle());}
+
     void setUserData() {m_body->SetUserData(this);}
 
     void setFixedRotation(bool status) {m_body->SetFixedRotation(status);};
@@ -41,10 +44,12 @@ public:
 
 
 protected:
-    b2Body * m_body;
-    sf::Sprite m_sprite;
+    b2Body * getBody() const {return m_body;}
+    sf::Sprite & getSprite() {return m_sprite;}
 
 private:
+    b2Body * m_body;
+    sf::Sprite m_sprite;
     b2World & m_world;
     sf::Vector2f m_pos;
     std::unique_ptr<Animation> m_animation;

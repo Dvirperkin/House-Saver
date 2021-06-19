@@ -4,8 +4,8 @@
 // Registers the Wall object to the objects factory.
 
 bool Wall::m_registerIt = Factory::registerObject('#', [](const sf::Vector2f &pos,
-                                                            b2World &world) -> std::unique_ptr<GameObject> {
-    return std::make_unique<Wall>(pos, world);
+                                                            b2World &world) -> std::shared_ptr<GameObject> {
+    return std::make_shared<Wall>(pos, world);
 });
 //=============================================================================
 Wall::Wall(const sf::Vector2f &pos, b2World &world) :

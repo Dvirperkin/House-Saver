@@ -7,8 +7,8 @@ public:
     MovingObject(const sf::Sprite&, const sf::Vector2f&, b2World &,
                  std::unique_ptr<Animation> = nullptr);
 
-    void moveX(float = 0, float = 0);
-    void moveY(float = 0, float = 0);
+    void moveX(float = 0);
+    void moveY(float = 0);
     virtual Side_t opposite(enum Side_t side);
 
 private:

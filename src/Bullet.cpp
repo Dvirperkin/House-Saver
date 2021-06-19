@@ -17,7 +17,7 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world,const Side_t& sideToSho
                         ((pos.y - getGlobalBounds().height/4) * HOUSE_OBJECT_CAPACITY.second - getGlobalBounds().height / 2) / WINDOW_SIZE.second };
     setPos(objectPosition);
     b2Vec2 position(objectPosition.x, objectPosition.y);
-    m_sprite.setScale(m_sprite.getScale().x / 3, m_sprite.getScale().y / 5);
+    getSprite().setScale(getSprite().getScale().x / 3, getSprite().getScale().y / 5);
     b2CircleShape circleShape;
     circleShape.m_radius = 0.48 - b2_polygonRadius;
 
@@ -36,11 +36,10 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world,const Side_t& sideToSho
 }
 //=========================================================================================
 bool Bullet::shoot(){
-    sf::Time deltaTime;
-    deltaTime = m_clock.getElapsedTime();
+    auto deltaTime = m_clock.getElapsedTime();
     if (deltaTime.asSeconds() >= BULLET_DISTANCE) {m_disposed = true;}
-    moveX(m_desiredVel, 0);
-    moveY(ANTI_GRAVITY.x, ANTI_GRAVITY.y);
+    moveX(m_desiredVel);
+    moveY(ANTI_GRAVITY.y);
     return m_disposed;
 }
 //=========================================================================================

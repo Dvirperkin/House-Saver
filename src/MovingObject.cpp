@@ -6,23 +6,23 @@ MovingObject::MovingObject(const sf::Sprite &sprite, const sf::Vector2f &pos, b2
 
 }
 //=====================================================================
-void MovingObject::moveX(float desiredVelX, float desiredVelY) {
+void MovingObject::moveX(float desiredVelX) {
     b2Vec2 vel = getBodyLinearVelocity();
     float velChangeX = desiredVelX - vel.x;
     float impulseX = getBodyMass() * velChangeX; //disregard time factor
-    m_body->ApplyLinearImpulse(b2Vec2(impulseX, 0), m_body->GetWorldCenter(), true);
+    getBody()->ApplyLinearImpulse(b2Vec2(impulseX, 0), getBody()->GetWorldCenter(), true);
 }
 //=============================================================================
-void MovingObject::moveY(float desiredVelX, float desiredVelY) {
+void MovingObject::moveY(float desiredVelY) {
     b2Vec2 vel = getBodyLinearVelocity();
     float velChangeY = desiredVelY - vel.y;
     float impulseY = getBodyMass() * velChangeY; //disregard time factor
-    m_body->ApplyLinearImpulse(b2Vec2(0, impulseY), m_body->GetWorldCenter(), true);
+    getBody()->ApplyLinearImpulse(b2Vec2(0, impulseY), getBody()->GetWorldCenter(), true);
 }
 //=============================================================================
 Side_t MovingObject::opposite(enum Side_t side) {
     if(side != m_side) {
-        m_sprite.scale(-1, 1);
+        getSprite().scale(-1, 1);
         m_side = side;
     }
     return m_side;

@@ -7,14 +7,13 @@ Building::Building() : m_world({0, 9.8}){
 void Building::build(const buildingDec & building) {
 
     //Reads building details - Width, Height.
-    int buildingWidth, buildingHeight;
     auto stringStream = std::stringstream();
 
     stringStream << *building.first;
-    if(!(stringStream >> buildingWidth >> buildingHeight))
+    if(!(stringStream >> m_width >> m_height))
         throw std::invalid_argument("");
 
-    m_staticObjects.resize(buildingHeight);
+    m_staticObjects.resize(m_height);
 
     //Creates building objects.
     auto i = 0;
@@ -22,21 +21,37 @@ void Building::build(const buildingDec & building) {
         for (size_t j = 0; j < it->size(); ++j) {
             switch ((*it)[j]) {
                 case PLAYER:
-                    m_player.reset(static_cast<Player *>(Factory::create(PLAYER, sf::Vector2f(j, i), m_world).release()));
+                    m_player = std::static_pointer_cast<Player>(Factory::create(PLAYER, sf::Vector2f(j, i), m_world));
                     break;
 
                 case ENEMY:
-                    m_enemy.emplace_back(static_cast<Enemy *>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world).release()));
+                    m_enemy.emplace_back(std::static_pointer_cast<Enemy>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world)));
                     break;
 
                 case KEY:
-                    m_takenObjects.emplace_back(static_cast<TakenObject *>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world).release()));
+                    m_takenObjects.emplace_back(std::static_pointer_cast<TakenObject>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world)));
+                    break;
+
+                case ELEVATOR:
+                    createElevator(sf::Vector2f(j, i));
                     break;
 
                 default:
-                    m_staticObjects[i].emplace_back(static_cast<StaticObject *>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world).release()));
+                    m_staticObjects[i].emplace_back(std::static_pointer_cast<StaticObject>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world)));
             }
         }
+    }
+}
+//=============================================================================
+void Building::createElevator(sf::Vector2f pos) {
+    static auto index = -1;
+
+    m_elevators.emplace_back(std::static_pointer_cast<Elevator>(Factory::create(ELEVATOR, pos, m_world)));
+    ++index;
+
+    if(index > 0){
+        m_elevators[index - 1]->setDestinationDown(m_elevators[index]);
+        m_elevators[index]->setDestinationUP(m_elevators[index - 1]);
     }
 }
 //=============================================================================
@@ -48,10 +63,14 @@ void Building::runBuilding(sf::RenderWindow& window) {
 }
 //=============================================================================
 void Building::moveMovingObject() {
-    if (!m_player->isDead())
+
+    if (!m_player->isDead()) {
         m_player->move();
+        m_player->use();
+    }
     else
         std::cout << "Player Dead\n";
+
 
     for (auto i = 0; i < m_enemy.size() ;i++) {
         if (!m_enemy[i]->isDead())
@@ -65,7 +84,7 @@ void Building::moveMovingObject() {
 //=============================================================================
 void Building::changeView(sf::RenderWindow & window) {
     auto view = window.getView();
-    view.setSize((WINDOW_SIZE.first / HOUSE_OBJECT_CAPACITY.first) * 12, (WINDOW_SIZE.second / HOUSE_OBJECT_CAPACITY.second) * 8);
+    view.setSize((WINDOW_SIZE.first / m_width) * 12, (WINDOW_SIZE.second / m_height) * 8);
 
     auto position = sf::Vector2f();
 
@@ -96,7 +115,7 @@ void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
         else
             m_takenObjects.erase(m_takenObjects.begin() + i);
     }
-    for (auto& staticObjectLine : m_staticObjects) {
+    for (auto & staticObjectLine : m_staticObjects) {
         for (auto& staticObject : staticObjectLine) {
             if (staticObject) {
                 staticObject->draw(window);
@@ -105,6 +124,10 @@ void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
         }
     }
 
+    for(auto & elevator : m_elevators){
+        elevator->draw(window);
+        elevator->update(deltaTime);
+    }
 
     for (auto& enemy : m_enemy) {
         enemy->draw(window);

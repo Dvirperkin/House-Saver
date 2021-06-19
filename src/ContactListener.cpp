@@ -1,77 +1,105 @@
 #include "ContactListener.h"
-#include "Player.h"
-#include "Key.h"
-#include "Enemy.h"
-#include <iostream>
+#include "Door.h"
 
 void ContactListener::BeginContact(b2Contact *contact) {
 
     auto bodyUserDataA = contact->GetFixtureA()->GetBody()->GetUserData();
     auto bodyUserDataB = contact->GetFixtureB()->GetBody()->GetUserData();
 
-    if(bodyUserDataA) {
+    if(bodyUserDataA && bodyUserDataB) {
         auto gameObjectA = static_cast<GameObject *>(bodyUserDataA);
-        if (gameObjectA->getBodyType() == PLAYER) {
-            auto player = static_cast<Player *>(bodyUserDataA);
-
-            if (bodyUserDataB){
-                auto gameObjectB = static_cast<GameObject *>(bodyUserDataB);
-
-                if(gameObjectB->getBodyType() == KEY) {
-                    auto key = static_cast<Key *>(bodyUserDataB);
-                    player->startContact(key);
-                }
-                if (gameObjectB->getBodyType() == ENEMY) {
-                    auto enemy = static_cast<Enemy*>(bodyUserDataB);
-                    player->startContact(enemy);
-                }
-            }
-        }
-        if (gameObjectA->getBodyType() == ENEMY) {
-            auto enemy = static_cast<Enemy*>(bodyUserDataA);
-            
-            if (bodyUserDataB) {
-                auto gameObjectB = static_cast<GameObject*>(bodyUserDataB);
-
-                if (gameObjectB->getBodyType() == BULLET) {
-                    auto bullet = static_cast<Bullet *>(bodyUserDataB);
-                    enemy->startContact(bullet);
-                }
-            }
-        }
-    }
-
-    if(bodyUserDataB) {
         auto gameObjectB = static_cast<GameObject *>(bodyUserDataB);
-        if (gameObjectB->getBodyType() == PLAYER) {
-            auto player = static_cast<Player *>(bodyUserDataB);
 
-            if (bodyUserDataA){
-                auto gameObjectA = static_cast<GameObject *>(bodyUserDataA);
-                if(gameObjectA->getBodyType() == KEY)
-                    player->startContact(static_cast<Key *>(bodyUserDataA));
-                if (gameObjectA->getBodyType() == ENEMY)
-                    player->startContact(static_cast<Enemy*>(bodyUserDataA));
-            }
+        switch (gameObjectA->getBodyType()) {
+            case PLAYER:
+                playerStartContact(static_cast<Player *>(bodyUserDataA), gameObjectB);
+                return;
+            case ENEMY:
+                enemyStartContact(static_cast<Enemy *>(bodyUserDataA), gameObjectB);
+                return;
+            default:
+                break;
         }
-        if (gameObjectB->getBodyType() == ENEMY) {
-            auto enemy = static_cast<Enemy*>(bodyUserDataB);
 
-            if (bodyUserDataA) {
-                auto gameObjectA = static_cast<GameObject*>(bodyUserDataA);
-
-                if (gameObjectA->getBodyType() == BULLET) {
-                    auto bullet = static_cast<Bullet*>(bodyUserDataA);
-                    enemy->startContact(bullet);
-                }
-            }
+        switch (gameObjectB->getBodyType()) {
+            case PLAYER:
+                playerStartContact(static_cast<Player *>(bodyUserDataB), gameObjectA);
+                return;
+            case ENEMY:
+                enemyStartContact(static_cast<Enemy *>(bodyUserDataB), gameObjectA);
+                return;
+            default:
+                break;
         }
     }
-
-
 }
 //=============================================================================
 void ContactListener::EndContact(b2Contact *contact) {
-    b2ContactListener::EndContact(contact);
+    auto bodyUserDataA = contact->GetFixtureA()->GetBody()->GetUserData();
+    auto bodyUserDataB = contact->GetFixtureB()->GetBody()->GetUserData();
+
+    if(bodyUserDataA && bodyUserDataB) {
+        auto gameObjectA = static_cast<GameObject *>(bodyUserDataA);
+        auto gameObjectB = static_cast<GameObject *>(bodyUserDataB);
+
+        switch (gameObjectA->getBodyType()) {
+            case PLAYER:
+                playerEndContact(static_cast<Player *>(bodyUserDataA), gameObjectB);
+                break;
+            default:
+                break;
+        }
+
+        switch (gameObjectB->getBodyType()) {
+            case PLAYER:
+                playerEndContact(static_cast<Player *>(bodyUserDataB), gameObjectA);
+                break;
+            default:
+                break;
+        }
+    }
+}
+//=============================================================================
+void ContactListener::playerStartContact(Player * player, GameObject * gameObject) {
+
+    switch (gameObject->getBodyType()) {
+        case KEY:
+            player->startContact(static_cast<Key *>(gameObject));
+            break;
+        case ENEMY:
+            player->startContact(static_cast<Enemy*>(gameObject));
+            break;
+        case DOOR:
+            player->startContact(static_cast<Door *>(gameObject));
+            break;
+        case ELEVATOR:
+            player->startContact(static_cast<Elevator *>(gameObject));
+            break;
+        default:
+            break;
+    }
+}
+//=============================================================================
+void ContactListener::playerEndContact(Player * player, GameObject * gameObject) {
+
+    switch (gameObject->getBodyType()) {
+        case DOOR:
+            player->endContact(static_cast<Door * >(gameObject));
+            break;
+        case ELEVATOR:
+            player->endContact(static_cast<Elevator * >(gameObject));
+            break;
+    }
+}
+//=============================================================================
+void ContactListener::enemyStartContact(Enemy * enemy, GameObject * gameObject) {
+    if (gameObject->getBodyType() == BULLET) {
+        auto bullet = static_cast<Bullet *>(gameObject);
+        enemy->startContact(bullet);
+    }
+}
+//=============================================================================
+void ContactListener::enemyEndContact(Enemy * enemy, GameObject * gameObject) {
+
 }
 //=============================================================================

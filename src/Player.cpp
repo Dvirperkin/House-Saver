@@ -1,18 +1,19 @@
 #include "Player.h"
 #include "Enemy.h"
+#include "Door.h"
 #include "Factory.h"
 
 // Registers the Player object to the objects factory.
 
 bool Player::m_registerIt = Factory::registerObject('P', [](const sf::Vector2f &pos,
-                                                                b2World &world) -> std::unique_ptr<GameObject> {
-    return std::make_unique<Player>(pos, world);
+                                                                b2World &world) -> std::shared_ptr<GameObject> {
+    return std::make_shared<Player>(pos, world);
 });
 //=========================================================================================
 Player::Player(const sf::Vector2f& pos, b2World& world) :
     MovingObject(Textures::texturesObject().getSprite(PLAYER_T), pos, world,
                  std::make_unique<Animation>(Textures::texturesObject().animationData(PLAYER_D),
-                                             AnimationStatus_t::Idle, m_sprite)){
+                                             AnimationStatus_t::Idle, getSprite())){
     b2Vec2 position(pos.x, pos.y);
 
     b2CircleShape circleShape;
@@ -30,61 +31,81 @@ Player::Player(const sf::Vector2f& pos, b2World& world) :
     setFixedRotation(true);
 }
 //=========================================================================================
-AnimationStatus_t Player::move() {
+void Player::move() {
 
     // Player Jump.
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        && m_movement != AnimationStatus_t::Jump && m_movement != AnimationStatus_t::Falling) {
-        moveY(0, -DESIREDVEL);
+        && m_movement != AnimationStatus_t::Jump && m_movement != AnimationStatus_t::Falling && m_movement != AnimationStatus_t::Shoot) {
+        moveY(-DESIRED_VEL);
     }
     // Player walk left.
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 
-        moveX(-DESIREDVEL, 0);
+        moveX(-DESIRED_VEL);
         m_side = opposite(Side_t::LEFT);
     }
     // Player walk right.
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        moveX(DESIREDVEL, 0);
+        moveX(DESIRED_VEL);
         m_side = opposite(Side_t::RIGHT);
     }
     // Player stands still.
     else {
-        moveX(0, 0);
+        moveX(0);
         m_movement = AnimationStatus_t::Idle;
     }
+
     // The player fires.
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) {
-        m_weapon.shoot(getPos(), *m_body->GetWorld(), m_side);
+        m_weapon.shoot(getPos(), *getBody()->GetWorld(), m_side);
         m_movement = AnimationStatus_t::Shoot;
     }
 
-    // Changes sprite according to the player situation.
-    if (m_body->GetLinearVelocity().y < 0)
+    // Changes sprite according to the player physical status.
+    if (getBody()->GetLinearVelocity().y < 0)
         m_movement = AnimationStatus_t::Jump;
-    else if (m_body->GetLinearVelocity().y > 0)
+    else if (getBody()->GetLinearVelocity().y > 0)
         m_movement = AnimationStatus_t::Falling;
-    else if (m_body->GetLinearVelocity().x != 0)
+    else if (getBody()->GetLinearVelocity().x != 0)
         m_movement = AnimationStatus_t::Walk;
-
     else{
         if (m_movement != AnimationStatus_t::Shoot)
-                m_movement = AnimationStatus_t::Idle;
+            m_movement = AnimationStatus_t::Idle;
     }
+
     m_weapon.bulletCheck();
 
     setAnimationStatus(m_movement);
-  
-    return m_movement;
 
+}
+//=========================================================================================
+void Player::use() {
+
+    static sf::Clock clock;
+
+    if(clock.getElapsedTime().asSeconds() <= DELAY)
+        return;
+
+    // The player uses an elevator.
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::E))) {
+        if(m_elevator && m_elevator->destinationUP()) {
+            setBodyPos(m_elevator->getElevatorDestinationUp());
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if(m_elevator && m_elevator->destinationDown()) {
+            setBodyPos(m_elevator->getElevatorDestinationDown());
+        }
+    }
+
+    clock.restart();
 }
 //=========================================================================================
 void Player::drawBullet(sf::RenderWindow& window,sf::Time deltaTime) {
     m_weapon.drawBullet(window,deltaTime);
 }
 //=========================================================================================
-bool Player::isDead()
-{
+bool Player::isDead(){
     if (m_hp <= 0)
         return true;
     return false;
@@ -97,7 +118,24 @@ void Player::startContact(Key* key) {
 //=========================================================================================
 void Player::startContact(Enemy* enemy) {
     m_hp -= enemy->getHit();
-    moveY(0, 3);
-
+    moveY(3);
+}
+//=========================================================================================
+void Player::startContact(Door * door) {
+    door->open();
+}
+//=========================================================================================
+void Player::startContact(Elevator* elevator) {
+    elevator->open();
+    m_elevator = elevator;
+}
+//=========================================================================================
+void Player::endContact(Door * door) {
+    door->close();
+}
+//=========================================================================================
+void Player::endContact(Elevator * elevator) {
+    elevator->close();
+    m_elevator = nullptr;
 }
 //=========================================================================================

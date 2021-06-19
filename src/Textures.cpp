@@ -12,6 +12,7 @@ namespace {
         player.m_data[AnimationStatus_t::Walk].emplace_back(1110, 50, 360, 450);
         player.m_data[AnimationStatus_t::Walk].emplace_back(1572, 50, 421, 456);
         player.m_data[AnimationStatus_t::Walk].emplace_back(2174, 59, 409, 470);
+        player.m_data[AnimationStatus_t::Walk].emplace_back(1110, 50, 360, 450);
         player.m_data[AnimationStatus_t::Walk].emplace_back(1108, 554, 365, 480);
         player.m_data[AnimationStatus_t::Walk].emplace_back(1602, 560, 397, 465);
         player.m_data[AnimationStatus_t::Walk].emplace_back(2150, 563, 403, 500);
@@ -95,13 +96,36 @@ namespace {
 
     }
 
-    AnimationData bulletData() {
-        auto bullet = AnimationData{};
+    AnimationData elevatorData() {
+        auto elevator = AnimationData{};
 
-        bullet.m_data[AnimationStatus_t::Idle].emplace_back(229, 410, 702, 176);
+        elevator.m_data[AnimationStatus_t::Open].emplace_back(32, 61, 94, 93);
+        elevator.m_data[AnimationStatus_t::Open].emplace_back(32, 215, 94, 93);
+        elevator.m_data[AnimationStatus_t::Open].emplace_back(32, 368, 94, 93);
+        elevator.m_data[AnimationStatus_t::Open].emplace_back(32, 523, 94, 93);
 
+        elevator.m_data[AnimationStatus_t::Close].emplace_back(32, 523, 94, 93);
+        elevator.m_data[AnimationStatus_t::Close].emplace_back(32, 368, 94, 93);
+        elevator.m_data[AnimationStatus_t::Close].emplace_back(32, 215, 94, 93);
+        elevator.m_data[AnimationStatus_t::Close].emplace_back(32, 61, 94, 93);
 
-        return bullet;
+        return elevator;
+    }
+
+    AnimationData doorData() {
+        auto door = AnimationData{};
+
+        door.m_data[AnimationStatus_t::Open].emplace_back(192, 78, 48, 76);
+        door.m_data[AnimationStatus_t::Open].emplace_back(192, 235, 48, 76);
+        door.m_data[AnimationStatus_t::Open].emplace_back(192, 386, 48, 76);
+        door.m_data[AnimationStatus_t::Open].emplace_back(192, 540, 48, 76);
+
+        door.m_data[AnimationStatus_t::Close].emplace_back(192, 540, 48, 76);
+        door.m_data[AnimationStatus_t::Close].emplace_back(192, 386, 48, 76);
+        door.m_data[AnimationStatus_t::Close].emplace_back(192, 235, 48, 76);
+        door.m_data[AnimationStatus_t::Close].emplace_back(192, 78, 48, 76);
+
+        return door;
     }
 }
 //===========================
@@ -127,9 +151,15 @@ Textures::Textures() {
     if (!m_textures[BULLET_T].loadFromFile("Bullet.png")) {
         throw std::runtime_error("Can't load file");
     }
+    if (!m_textures[ELEVATOR_DOOR_T].loadFromFile("Elevator_Door.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+
     m_animationsData[PLAYER_D] = playerData();
     m_animationsData[ENEMY_D] = enemyData();
     m_animationsData[KEY_D] = keyData();
+    m_animationsData[ELEVATOR_D] = elevatorData();
+    m_animationsData[DOOR_D] = doorData();
 }
 //=============================================================================
 Textures& Textures::texturesObject() {
