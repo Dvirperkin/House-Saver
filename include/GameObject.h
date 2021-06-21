@@ -10,14 +10,14 @@
 class GameObject {
 public:
     //----------Constructors\Destructors Section----------
-    GameObject(const sf::Sprite &, const sf::Vector2f &, b2World &, std::unique_ptr<Animation> = nullptr);
+    GameObject(const sf::Sprite &, const sf::Vector2f &, b2World &, const sf::Vector2f &, std::unique_ptr<Animation> = nullptr);
     virtual ~GameObject();
 
     void draw(sf::RenderWindow & window){window.draw(m_sprite);}
 
     void rigidBody(b2World &, const b2Vec2 &,const b2FixtureDef &, const b2BodyType = b2_staticBody);
 
-    void update(sf::Time deltaTime);
+    void update(sf::Time deltaTime, const sf::Vector2f &);
 
     sf::Vector2f getPos() const {return m_sprite.getPosition();}
     sf::FloatRect getGlobalBounds() const {return m_sprite.getGlobalBounds();}

@@ -6,7 +6,7 @@
 
 class Box : public StaticObject{
 public:
-    Box(const sf::Vector2f &, b2World &);
+    Box(const sf::Vector2f &, b2World &, const sf::Vector2f&);
 
     Objects_t getBodyType() const override {return BOX;}
 

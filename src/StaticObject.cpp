@@ -1,8 +1,8 @@
 #include "StaticObject.h"
 
-StaticObject::StaticObject(const sf::Sprite &sprite, const sf::Vector2f &pos, b2World & world,const bool sensorStatus, b2BodyType bodyType,
+StaticObject::StaticObject(const sf::Sprite &sprite, const sf::Vector2f &pos, b2World & world, const sf::Vector2f& dimension,const bool sensorStatus, b2BodyType bodyType,
                            std::unique_ptr<Animation> animation)
-                : GameObject(sprite, pos, world, std::move(animation)) {
+                : GameObject(sprite, pos, world, dimension, std::move(animation)) {
 
     b2Vec2 position(pos.x, pos.y);
 
@@ -12,7 +12,7 @@ StaticObject::StaticObject(const sf::Sprite &sprite, const sf::Vector2f &pos, b2
 
     fixtureDef.shape = &polygonShape;
     fixtureDef.density = 2.f;
-    fixtureDef.friction = 0.f;
+    fixtureDef.friction = 5.f;
     fixtureDef.isSensor = sensorStatus;
     rigidBody(world, position, fixtureDef, bodyType);
 }

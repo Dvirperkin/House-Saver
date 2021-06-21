@@ -3,13 +3,13 @@
 
 // Registers the Box object to the objects factory.
 
-bool Box::m_registerIt = Factory::registerObject('B', [](const sf::Vector2f &pos,
-                                                         b2World &world) -> std::shared_ptr<GameObject> {
-    return std::make_shared<Box>(pos, world);
+bool Box::m_registerIt = Factory<StaticObject>::registerObject(BOX, [](const sf::Vector2f &pos,
+                                                         b2World &world, const sf::Vector2f& dimension) -> std::shared_ptr<StaticObject> {
+    return std::make_shared<Box>(pos, world, dimension);
 });
 //=============================================================================
-Box::Box(const sf::Vector2f & pos, b2World & world) : StaticObject(Textures::texturesObject().getSprite(BOX_T),
-                                                                   pos, world, false, b2_dynamicBody){
+Box::Box(const sf::Vector2f & pos, b2World & world, const sf::Vector2f& dimension) : StaticObject(Textures::texturesObject().getSprite(BOX_T),
+                                                                   pos, world, dimension, false, b2_dynamicBody){
     setFixedRotation(true);
 }
 //=============================================================================

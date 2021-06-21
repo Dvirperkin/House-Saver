@@ -7,10 +7,13 @@ GameController::GameController() : m_currentScreen(GAME_PLAY){
 //=============================================================================
 void GameController::run() {
     auto window = sf::RenderWindow(sf::VideoMode(1000,1000), "HouseSaver");
+    auto backGround = Textures::texturesObject().getSprite(BACKGROUND_T);
     window.setFramerateLimit(60);
 
     while(window.isOpen()) {
         window.clear();
+        window.draw(backGround);
+
         switch(m_currentScreen){
             case MAIN_MENU:
                 m_currentScreen = m_screens[MAIN_MENU]->display(window);

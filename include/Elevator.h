@@ -5,7 +5,7 @@
 class Elevator : public StaticObject{
 public:
 
-    Elevator(const sf::Vector2f &, b2World &);
+    Elevator(const sf::Vector2f &, b2World &, const sf::Vector2f&);
 
     Objects_t getBodyType() const override {return ELEVATOR;}
     void setDestinationUP(std::shared_ptr<Elevator> elevator) {m_destinationUP = elevator;}

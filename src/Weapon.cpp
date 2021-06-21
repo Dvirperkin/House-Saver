@@ -1,21 +1,23 @@
 #include "Weapon.h"
 
-Weapon::Weapon():m_fireRate(START_FIRE_RATE), m_bulletDamage(START_BULLET_DAMAGE){}
+Weapon::Weapon(const sf::Vector2f & dimension):m_fireRate(START_FIRE_RATE),
+                                            m_bulletDamage(START_BULLET_DAMAGE), m_dimension(dimension){}
 //===============================================================
-void Weapon::shoot(sf::Vector2f pos,b2World &world, Side_t side)
-{
+void Weapon::shoot(sf::Vector2f pos, b2World & world, Side_t side){
+
     if (m_clock.getElapsedTime().asSeconds() >= m_fireRate) {
-        m_bullets.emplace_back(std::make_unique<Bullet>(pos, world, side,m_bulletDamage));
+        m_bullets.emplace_back(std::make_unique<Bullet>(pos, world,
+                                                        m_dimension,
+                                                        side, m_bulletDamage));
         m_clock.restart();
     } 
 }
 //===============================================================
-void Weapon::setFireRate(const float& fireRate)
-{
+void Weapon::setFireRate(const float& fireRate){
     m_fireRate = fireRate;
 }
-void Weapon::setBulletDamage(const float & bulletDamage)
-{
+//===============================================================
+void Weapon::setBulletDamage(const float & bulletDamage){
     m_bulletDamage = bulletDamage;
 }
 //===============================================================
@@ -27,10 +29,11 @@ void Weapon::bulletCheck(){
         }
     }
 }
-
+//===============================================================
 void Weapon::drawBullet(sf::RenderWindow& window, sf::Time deltaTime) {
     for (auto& bullet : m_bullets) {
         bullet->draw(window);
-        bullet->update(deltaTime);
+        bullet->update(deltaTime, m_dimension);
     }
 }
+//===============================================================

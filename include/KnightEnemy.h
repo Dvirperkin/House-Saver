@@ -5,7 +5,7 @@
 
 class KnightEnemy : public Enemy {
 public:
-    KnightEnemy(const sf::Vector2f &, b2World &);
+    KnightEnemy(const sf::Vector2f &, b2World &, const sf::Vector2f&);
 
     AnimationStatus_t move();
 

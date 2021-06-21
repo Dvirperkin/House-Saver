@@ -13,12 +13,13 @@
 
 // A class that implement factory for creating game objects.
 
+template <typename T>
 class Factory {
 public:
 
-    using pFnc = std::shared_ptr<GameObject>(*)(const sf::Vector2f &, b2World &);
+    using pFnc = std::shared_ptr<T>(*)(const sf::Vector2f &, b2World &, const sf::Vector2f&);
 
-    static std::shared_ptr<GameObject> create(const char &, const sf::Vector2f &, b2World &);
+    static std::shared_ptr<T> create(const char &, const sf::Vector2f &, b2World &, const sf::Vector2f&);
 
     static bool registerObject(const char &, pFnc);
 
@@ -28,3 +29,22 @@ private:
         return map;
     }
 };
+
+template<typename T>
+std::shared_ptr<T> Factory<T>::create(const char & name, const sf::Vector2f & pos, b2World & world,
+                                      const sf::Vector2f & dimension) {
+    // Checks if the request object is registered to the factory.
+    auto it = Factory::getMap().find(name);
+    if(it == Factory::getMap().end())
+        return nullptr;
+    return it->second(pos, world, dimension);
+}
+//=============================================================================
+template<typename T>
+bool Factory<T>::registerObject(const char & name, Factory::pFnc func) {
+    // Registers object to the factory.
+    Factory::getMap().emplace(name, func);
+
+    return true;
+}
+//=============================================================================

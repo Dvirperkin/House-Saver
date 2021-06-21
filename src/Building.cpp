@@ -1,10 +1,8 @@
 #include "Building.h"
 
-Building::Building() : m_world({0, 9.8}){
+Building::Building(const buildingDec & building, const buildingsDec& rooms,
+                   PlayerStats & playerStats) : m_world({0, 9.8}){
     m_world.SetContactListener(&m_contactListener);
-}
-//=============================================================================
-void Building::build(const buildingDec & building) {
 
     //Reads building details - Width, Height.
     auto stringStream = std::stringstream();
@@ -13,40 +11,84 @@ void Building::build(const buildingDec & building) {
     if(!(stringStream >> m_width >> m_height))
         throw std::invalid_argument("");
 
+    build(building, rooms, playerStats);
+}
+//=============================================================================
+void Building::build(const buildingDec & building, const buildingsDec & rooms, PlayerStats & playerStats) {
+
     m_staticObjects.resize(m_height);
 
     //Creates building objects.
-    auto i = 0;
-    for (auto it = building.first + 1; it < building.second; ++it, ++i) {
-        for (size_t j = 0; j < it->size(); ++j) {
-            switch ((*it)[j]) {
+    size_t row = 0;
+
+    auto roomIt = rooms.first;
+
+    for (auto it = building.first + 1; it < building.second; ++it, ++row) {
+        for (size_t col = 0; col < it->size(); ++col) {
+            auto object = (*it)[col];
+            switch (object) {
                 case PLAYER:
-                    m_player = std::static_pointer_cast<Player>(Factory::create(PLAYER, sf::Vector2f(j, i), m_world));
+                    m_player = std::make_shared<Player>(sf::Vector2f(col, row), m_world,
+                                                        sf::Vector2f(m_width ,m_height), playerStats);
                     break;
 
                 case ENEMY:
-                    m_enemy.emplace_back(std::static_pointer_cast<Enemy>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world)));
+                    m_enemy.emplace_back(Factory<Enemy>::create(object, sf::Vector2f(col, row), m_world,
+                                                                sf::Vector2f(m_width ,m_height)));
                     break;
 
                 case KEY:
-                    m_takenObjects.emplace_back(std::static_pointer_cast<TakenObject>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world)));
+                    m_takenObjects.emplace_back(Factory<TakenObject>::create(object, sf::Vector2f(col, row),
+                                                                              m_world, sf::Vector2f(m_width, m_height)));
                     break;
 
                 case ELEVATOR:
-                    createElevator(sf::Vector2f(j, i));
+                    createElevator(sf::Vector2f(col, row));
+                    break;
+
+                case DOOR:
+                    if(rooms.first == rooms.second) {
+                        m_doors.emplace_back(std::make_shared<Door>(
+                                sf::Vector2f(col, row), m_world,
+                                sf::Vector2f(m_width, m_height)));
+                        break;
+                    }
+
+                    createDoor(roomIt, sf::Vector2f(col, row), playerStats);
                     break;
 
                 default:
-                    m_staticObjects[i].emplace_back(std::static_pointer_cast<StaticObject>(Factory::create((*it)[j], sf::Vector2f(j, i), m_world)));
+                    m_staticObjects[row].emplace_back(Factory<StaticObject>::create(
+                            object, sf::Vector2f(col, row),
+                            m_world, sf::Vector2f(m_width, m_height)));
             }
         }
     }
 }
 //=============================================================================
+void Building::createDoor(std::vector<building>::const_iterator & roomIt,
+                          sf::Vector2f pos,
+                          PlayerStats & playerStats) {
+
+    m_doors.emplace_back(std::make_shared<Door>(
+            pos, m_world,
+            sf::Vector2f(m_width, m_height),
+            buildRoom(playerStats, {roomIt->cbegin(), roomIt->cend()})));
+    ++roomIt;
+}
+//=============================================================================
+std::shared_ptr<Building> Building::buildRoom(PlayerStats & playerStats,
+                                              const buildingDec & room,
+                                              const buildingsDec & subRooms){
+
+    return std::make_shared<Building>(room, subRooms, playerStats);
+}
+//=============================================================================
 void Building::createElevator(sf::Vector2f pos) {
     static auto index = -1;
 
-    m_elevators.emplace_back(std::static_pointer_cast<Elevator>(Factory::create(ELEVATOR, pos, m_world)));
+    m_elevators.emplace_back(std::make_shared<Elevator>(pos, m_world,
+                                                        sf::Vector2f (m_width, m_height)));
     ++index;
 
     if(index > 0){
@@ -55,18 +97,28 @@ void Building::createElevator(sf::Vector2f pos) {
     }
 }
 //=============================================================================
-void Building::runBuilding(sf::RenderWindow& window) {
+BuildingDetails Building::runBuilding(sf::RenderWindow& window) {
+    m_details.exit = false;
 
+    if (m_inRoom) {
+        auto buildingDetails = m_player->getDoor()->runRoom(window);
+        if(buildingDetails.exit)
+            m_inRoom = false;
+
+        return m_details;
+    }
     m_world.Step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     moveMovingObject();
+    action();
     changeView(window);
+
+    return m_details;
 }
 //=============================================================================
 void Building::moveMovingObject() {
 
     if (!m_player->isDead()) {
         m_player->move();
-        m_player->use();
     }
     else
         std::cout << "Player Dead\n";
@@ -82,9 +134,28 @@ void Building::moveMovingObject() {
     }
 }
 //=============================================================================
+void Building::action() {
+    auto PlayerAction = m_player->use();
+
+    if(PlayerAction == sf::Keyboard::F) {
+        if(!m_player->getDoor()->isRoom()) {
+            m_details.exit = true;
+            return;
+        }
+        m_inRoom = true;
+    }
+
+    else if (PlayerAction == sf::Keyboard::E)
+        m_player->setBodyPos(m_player->getElevator()->getElevatorDestinationUp());
+
+    else if (PlayerAction == sf::Keyboard::Q)
+        m_player->setBodyPos(m_player->getElevator()->getElevatorDestinationDown());
+
+}
+//=============================================================================
 void Building::changeView(sf::RenderWindow & window) {
     auto view = window.getView();
-    view.setSize((WINDOW_SIZE.first / m_width) * 12, (WINDOW_SIZE.second / m_height) * 8);
+    view.setSize(float(WINDOW_SIZE.first / m_width) * 12, (float(WINDOW_SIZE.second / m_height) * 8));
 
     auto position = sf::Vector2f();
 
@@ -107,10 +178,22 @@ void Building::changeView(sf::RenderWindow & window) {
 }
 //=============================================================================
 void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
+    if (m_inRoom) {
+        m_player->getDoor()->drawRoom(window, deltaTime);
+        return;
+    }
+    for (auto& elevator : m_elevators) {
+        elevator->draw(window);
+        elevator->update(deltaTime, sf::Vector2f(m_width,m_height));
+    }
+    for (auto& doors : m_doors) {
+        doors->draw(window);
+        doors->update(deltaTime, sf::Vector2f(m_width, m_height));
+    }
     for (size_t i = 0; i < m_takenObjects.size(); ++i) {
         if (!m_takenObjects[i]->isTaken()) {
             m_takenObjects[i]->draw(window);
-            m_takenObjects[i]->update(deltaTime);
+            m_takenObjects[i]->update(deltaTime, sf::Vector2f(m_width, m_height));
         }
         else
             m_takenObjects.erase(m_takenObjects.begin() + i);
@@ -119,22 +202,17 @@ void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
         for (auto& staticObject : staticObjectLine) {
             if (staticObject) {
                 staticObject->draw(window);
-                staticObject->update(deltaTime);
+                staticObject->update(deltaTime, sf::Vector2f(m_width, m_height));
             }
         }
     }
 
-    for(auto & elevator : m_elevators){
-        elevator->draw(window);
-        elevator->update(deltaTime);
-    }
-
     for (auto& enemy : m_enemy) {
         enemy->draw(window);
-        enemy->update(deltaTime);
+        enemy->update(deltaTime, sf::Vector2f(m_width, m_height));
     }
     m_player->draw(window);
-    m_player->update(deltaTime);
+    m_player->update(deltaTime, sf::Vector2f(m_width, m_height));
     m_player->drawBullet(window, deltaTime);
 }
 //=============================================================================

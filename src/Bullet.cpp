@@ -1,7 +1,8 @@
 #include "Bullet.h"
 
-Bullet::Bullet(const sf::Vector2f & pos, b2World & world,const Side_t& sideToShoot, const float& hitPoint):m_sideToShoot(sideToShoot),
-        m_hitPoint(hitPoint),MovingObject(Textures::texturesObject().getSprite(BULLET_T), pos, world){
+Bullet::Bullet(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension,
+               const Side_t& sideToShoot, const float & hitPoint):m_sideToShoot(sideToShoot), m_hitPoint(hitPoint),
+               MovingObject(Textures::texturesObject().getSprite(BULLET_T), pos, world,dimension){
     auto to_add = 0;
     if (m_sideToShoot == Side_t::RIGHT) {
         m_desiredVel = 8;
@@ -13,13 +14,14 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world,const Side_t& sideToSho
         to_add -= getGlobalBounds().width / 2;
         opposite(Side_t::LEFT);
     }
-    auto objectPosition = sf::Vector2f{ ((pos.x + to_add) * HOUSE_OBJECT_CAPACITY.first - getGlobalBounds().width / 2) / WINDOW_SIZE.first,
-                        ((pos.y - getGlobalBounds().height/4) * HOUSE_OBJECT_CAPACITY.second - getGlobalBounds().height / 2) / WINDOW_SIZE.second };
+
+    auto objectPosition = sf::Vector2f{ ((pos.x + to_add) * dimension.x - getGlobalBounds().width / 2) / WINDOW_SIZE.first,
+                        ((pos.y - getGlobalBounds().height/4) * dimension.y - getGlobalBounds().height / 2) / WINDOW_SIZE.second };
     setPos(objectPosition);
     b2Vec2 position(objectPosition.x, objectPosition.y);
     getSprite().setScale(getSprite().getScale().x / 3, getSprite().getScale().y / 5);
     b2CircleShape circleShape;
-    circleShape.m_radius = 0.48 - b2_polygonRadius;
+    circleShape.m_radius = 0.48 / 3 - b2_polygonRadius;
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circleShape;

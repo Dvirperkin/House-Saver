@@ -1,18 +1,12 @@
 #include "Elevator.h"
 #include "Factory.h"
 
-// Registers the Box object to the objects factory.
-
-bool Elevator::m_registerIt = Factory::registerObject('^', [](const sf::Vector2f &pos,
-                                                         b2World &world) -> std::shared_ptr<GameObject> {
-    return std::make_shared<Elevator>(pos, world);
-});
 //=============================================================================
-Elevator::Elevator(const sf::Vector2f & pos, b2World & world) :
+Elevator::Elevator(const sf::Vector2f & pos, b2World & world, const sf::Vector2f& dimension) :
         StaticObject(Textures::texturesObject().getSprite(ELEVATOR_DOOR_T),
-                     pos, world, true, b2_staticBody,
+                     pos, world, dimension, true, b2_staticBody,
                      std::make_unique<Animation>(Textures::texturesObject().animationData(ELEVATOR_D),
-                                                 AnimationStatus_t::Close, getSprite())){
+                                                 AnimationStatus_t::Close, getSprite(), dimension)){
     setUserData();
 }
 //=============================================================================

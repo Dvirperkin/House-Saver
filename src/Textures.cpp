@@ -154,6 +154,13 @@ Textures::Textures() {
     if (!m_textures[ELEVATOR_DOOR_T].loadFromFile("Elevator_Door.png")) {
         throw std::runtime_error("Can't load file");
     }
+    if (!m_textures[BACKGROUND_T].loadFromFile("BackGround.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+    if (!m_textures[STAT_BACKGROUND_T].loadFromFile("StatBackGround.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+
 
     m_animationsData[PLAYER_D] = playerData();
     m_animationsData[ENEMY_D] = enemyData();

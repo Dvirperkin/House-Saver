@@ -19,11 +19,11 @@
 ##############################
 #                            #
 #                            #
-#    P   D   ^   K        D  #
+#     P  D   ^   K        D  #
 ##############################
 #                            #
 #                            #
-#        D   ^     E KK      #
+#            ^     E KK      #
 ##############################
 20 20
 ####################
@@ -42,9 +42,9 @@
 #      BBBBBBBBBBBB#
 #P  B  #############
 #                  #
-#               B  #
-#  BBBBBBBBBBBBBBBB#
-# BBBBBBBBBBBBBBBBB#
+#          P    B  #
+#                  #
+#          D       #
 ####################
 20 20
 ####################
@@ -63,7 +63,7 @@
 #      BBBBBBBBBBBB#
 #   B              #
 #BBBBBBBBBBBBB     #
-#               B  #
+#      P  D     B  #
 #  BBBBBBBBBBBBBBBB#
-#PBBBBBBBBBBBBBBBBB#
+# BBBBBBBBBBBBBBBBB#
 ####################

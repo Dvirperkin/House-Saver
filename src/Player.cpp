@@ -3,17 +3,13 @@
 #include "Door.h"
 #include "Factory.h"
 
-// Registers the Player object to the objects factory.
 
-bool Player::m_registerIt = Factory::registerObject('P', [](const sf::Vector2f &pos,
-                                                                b2World &world) -> std::shared_ptr<GameObject> {
-    return std::make_shared<Player>(pos, world);
-});
 //=========================================================================================
-Player::Player(const sf::Vector2f& pos, b2World& world) :
-    MovingObject(Textures::texturesObject().getSprite(PLAYER_T), pos, world,
+Player::Player(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension, PlayerStats & playerStats) :
+    MovingObject(Textures::texturesObject().getSprite(PLAYER_T), pos, world,dimension,
                  std::make_unique<Animation>(Textures::texturesObject().animationData(PLAYER_D),
-                                             AnimationStatus_t::Idle, getSprite())){
+                                             AnimationStatus_t::Idle, getSprite(), dimension)),m_weapon(dimension),
+                                             m_stats(playerStats){
     b2Vec2 position(pos.x, pos.y);
 
     b2CircleShape circleShape;
@@ -79,26 +75,32 @@ void Player::move() {
 
 }
 //=========================================================================================
-void Player::use() {
+sf::Keyboard::Key Player::use() {
 
     static sf::Clock clock;
 
     if(clock.getElapsedTime().asSeconds() <= DELAY)
-        return;
+        return sf::Keyboard::Unknown;
 
     // The player uses an elevator.
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::E))) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
         if(m_elevator && m_elevator->destinationUP()) {
-            setBodyPos(m_elevator->getElevatorDestinationUp());
+            return sf::Keyboard::E;
         }
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
         if(m_elevator && m_elevator->destinationDown()) {
-            setBodyPos(m_elevator->getElevatorDestinationDown());
+            return sf::Keyboard::Q;
         }
+    }
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::F)){
+        if (m_door)
+            return sf::Keyboard::F;
     }
 
     clock.restart();
+    return sf::Keyboard::Unknown;
+
 }
 //=========================================================================================
 void Player::drawBullet(sf::RenderWindow& window,sf::Time deltaTime) {
@@ -106,23 +108,23 @@ void Player::drawBullet(sf::RenderWindow& window,sf::Time deltaTime) {
 }
 //=========================================================================================
 bool Player::isDead(){
-    if (m_hp <= 0)
+    if(m_stats.getLives() <= 0)
         return true;
     return false;
 }
 //=========================================================================================
 void Player::startContact(Key* key) {
-    ++m_keys;
+    m_stats.keyCollected();
     key->take();
 }
 //=========================================================================================
 void Player::startContact(Enemy* enemy) {
-    m_hp -= enemy->getHit();
-    moveY(3);
+    m_stats.decreaseHP(enemy->getHit());
 }
 //=========================================================================================
 void Player::startContact(Door * door) {
     door->open();
+    m_door = door;
 }
 //=========================================================================================
 void Player::startContact(Elevator* elevator) {
@@ -132,10 +134,17 @@ void Player::startContact(Elevator* elevator) {
 //=========================================================================================
 void Player::endContact(Door * door) {
     door->close();
+    m_door = nullptr;
 }
 //=========================================================================================
 void Player::endContact(Elevator * elevator) {
     elevator->close();
     m_elevator = nullptr;
+}
+//=========================================================================================
+void Player::draw(sf::RenderWindow & window) {
+    GameObject::draw(window);
+
+    m_stats.display(window);
 }
 //=========================================================================================

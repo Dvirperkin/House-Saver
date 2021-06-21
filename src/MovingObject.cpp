@@ -1,8 +1,9 @@
 #include "MovingObject.h"
 
-MovingObject::MovingObject(const sf::Sprite &sprite, const sf::Vector2f &pos, b2World & world,
+MovingObject::MovingObject(const sf::Sprite &sprite, const sf::Vector2f & pos, b2World & world,
+                           const sf::Vector2f & dimension,
                            std::unique_ptr<Animation> animation) :
-                           GameObject(sprite, pos, world, std::move(animation)), m_side(Side_t::RIGHT){
+                           GameObject(sprite, pos, world, dimension, std::move(animation)), m_side(Side_t::RIGHT){
 
 }
 //=====================================================================

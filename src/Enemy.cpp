@@ -1,10 +1,10 @@
 #include "Enemy.h"
 
 //=============================================================================
-Enemy::Enemy(const sf::Vector2f& pos, b2World& world) :
-    MovingObject(Textures::texturesObject().getSprite(ENEMY_T), pos, world,
+Enemy::Enemy(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension) :
+    MovingObject(Textures::texturesObject().getSprite(ENEMY_T), pos, world, dimension,
         std::make_unique<Animation>(Textures::texturesObject().animationData(ENEMY_D),
-            AnimationStatus_t::Idle, getSprite())),m_dir(0,0) ,m_hp(300){
+            AnimationStatus_t::Idle, getSprite(), dimension)),m_dir(0,0) ,m_hp(300){
 
     b2Vec2 position(pos.x, pos.y);
 
@@ -26,7 +26,7 @@ Enemy::Enemy(const sf::Vector2f& pos, b2World& world) :
 AnimationStatus_t Enemy::move() {
 
     if (m_hitted) {
-        moveX(HIT_MOVE);
+        moveX(HIT_MOVE * m_side);
         moveY(HIT_MOVE);
         m_hitted = false;
     }
@@ -66,6 +66,11 @@ void Enemy::startContact(Player* player) {
 }
 //=========================================================================================
 void Enemy::startContact(Bullet* bullet){
+    if (bullet->getBodyLinearVelocity().x >= 0)
+        m_side *= 1;
+    else
+        m_side *= -1;
+
     m_hitted = true;
     m_hp -= bullet->getHit();
     bullet->hit();

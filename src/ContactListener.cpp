@@ -93,9 +93,14 @@ void ContactListener::playerEndContact(Player * player, GameObject * gameObject)
 }
 //=============================================================================
 void ContactListener::enemyStartContact(Enemy * enemy, GameObject * gameObject) {
-    if (gameObject->getBodyType() == BULLET) {
-        auto bullet = static_cast<Bullet *>(gameObject);
-        enemy->startContact(bullet);
+
+    switch (gameObject->getBodyType()) {
+        case PLAYER:
+            static_cast<Player *>(gameObject)->startContact(enemy);
+            break;
+        case BULLET:
+            enemy->startContact(static_cast<Bullet *>(gameObject));
+            break;
     }
 }
 //=============================================================================

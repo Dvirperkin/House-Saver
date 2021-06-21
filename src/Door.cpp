@@ -1,20 +1,27 @@
 #include "Door.h"
-// Registers the Box object to the objects factory.
+#include "Building.h"
 
-bool Door::m_registerIt = Factory::registerObject('D', [](const sf::Vector2f &pos,
-                                                              b2World &world) -> std::shared_ptr<GameObject> {
-    return std::make_shared<Door>(pos, world);
-});
 //=============================================================================
-Door::Door(const sf::Vector2f & pos, b2World & world) :
+Door::Door(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension,
+           std::shared_ptr<Building> building) : m_building(building),
             StaticObject(Textures::texturesObject().getSprite(ELEVATOR_DOOR_T),
-                         pos, world, true, b2_staticBody,
+                         pos, world, dimension, true, b2_staticBody,
                          std::make_unique<Animation>(Textures::texturesObject().animationData(DOOR_D),
-                                                     AnimationStatus_t::Close, getSprite())){
+                                                     AnimationStatus_t::Close, getSprite(), dimension)){
     setUserData();
 }
 //=============================================================================
-void Door::setRoom(Room & room) {
-    m_room = &room;
+BuildingDetails Door::runRoom(sf::RenderWindow& window) {
+    return m_building->runBuilding(window);
+}
+//=============================================================================
+bool Door::isRoom() const{
+    if(m_building)
+        return true;
+    return false;
+}
+//=============================================================================
+void Door::drawRoom(sf::RenderWindow& window,sf::Time deltaTime) {
+    m_building->draw(window, deltaTime);
 }
 //=============================================================================

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MovingObject.h"
+#include "PlayerStats.h"
 #include "Weapon.h"
 #include "Bullet.h"
 
@@ -8,20 +9,22 @@ class Key;
 class Elevator;
 class Door;
 
-
 // A class that represents a player.
 
 class Player : public MovingObject {
 public:
 
-    Player(const sf::Vector2f& pos, b2World&);
+    Player(const sf::Vector2f & pos, b2World &, const sf::Vector2f &, PlayerStats &);
 
     void move();
-    void use();
+    sf::Keyboard::Key use();
 
     Objects_t getBodyType() const override {return PLAYER;};
+    Door * getDoor() const {return m_door;}
+    Elevator* getElevator() const { return m_elevator; }
 
-    void drawBullet(sf::RenderWindow& ,sf::Time);
+    void draw(sf::RenderWindow &);
+    void drawBullet(sf::RenderWindow &, sf::Time);
     bool isDead();
 
     //----------Contacts Section----------
@@ -33,12 +36,15 @@ public:
     void endContact(Door *);
 	void endContact(Elevator *);
 
+
 private:
     static bool m_registerIt;
 
-    float m_hp = 100;
-    Elevator * m_elevator;
-    unsigned int m_keys = 0;
+    PlayerStats & m_stats;
+
+    float m_hp = START_HP;
+    Door * m_door = nullptr;
+    Elevator * m_elevator = nullptr;
     Side_t m_side = Side_t::RIGHT;
 
     Weapon m_weapon;
