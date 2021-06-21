@@ -14,7 +14,8 @@ void ContactListener::BeginContact(b2Contact *contact) {
             case PLAYER:
                 playerStartContact(static_cast<Player *>(bodyUserDataA), gameObjectB);
                 return;
-            case ENEMY:
+            case KNIGHT_ENEMY:
+            case SHOOTER_ENEMY:
                 enemyStartContact(static_cast<Enemy *>(bodyUserDataA), gameObjectB);
                 return;
             default:
@@ -25,7 +26,8 @@ void ContactListener::BeginContact(b2Contact *contact) {
             case PLAYER:
                 playerStartContact(static_cast<Player *>(bodyUserDataB), gameObjectA);
                 return;
-            case ENEMY:
+            case KNIGHT_ENEMY:
+            case SHOOTER_ENEMY:
                 enemyStartContact(static_cast<Enemy *>(bodyUserDataB), gameObjectA);
                 return;
             default:
@@ -66,7 +68,8 @@ void ContactListener::playerStartContact(Player * player, GameObject * gameObjec
         case KEY:
             player->startContact(static_cast<Key *>(gameObject));
             break;
-        case ENEMY:
+        case KNIGHT_ENEMY:
+        case SHOOTER_ENEMY:
             player->startContact(static_cast<Enemy*>(gameObject));
             break;
         case DOOR:

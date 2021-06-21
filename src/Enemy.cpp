@@ -1,11 +1,10 @@
 #include "Enemy.h"
 
 //=============================================================================
-Enemy::Enemy(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension) :
-    MovingObject(Textures::texturesObject().getSprite(ENEMY_T), pos, world, dimension,
-        std::make_unique<Animation>(Textures::texturesObject().animationData(ENEMY_D),
-            AnimationStatus_t::Idle, getSprite(), dimension)),m_dir(0,0) ,m_hp(300){
-
+Enemy::Enemy(const sf::Sprite & sprite, const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension,
+             std::unique_ptr<Animation> animation) :
+    MovingObject(sprite, pos, world, dimension,
+                 std::move(animation)), m_dir(0,0) ,m_hp(300){
     b2Vec2 position(pos.x, pos.y);
 
     b2CircleShape circleShape;
@@ -23,18 +22,25 @@ Enemy::Enemy(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dim
     setFixedRotation(true);
 }
 //=========================================================================================
-AnimationStatus_t Enemy::move() {
+AnimationStatus_t Enemy::move(sf::Vector2f playerPosition) {
 
     if (m_hitted) {
-        moveX(HIT_MOVE * m_side);
+        moveX(HIT_MOVE*m_side);
         moveY(HIT_MOVE);
         m_hitted = false;
     }
-
-    else if (m_dir.y < 0){
+    if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10) {
+        if (playerPosition.x < getPos().x) {
+            m_dir.x = -2;
+        }
+        else {
+            m_dir.x = 2;
+        }
+    }
+    if (m_dir.y < 0){
         moveY(m_dir.y);
     }
-    else if (m_dir.x < 0 ) {      
+    else if (m_dir.x < 0 ) {
         moveX(m_dir.x);
         opposite(Side_t::LEFT);
     }
@@ -47,7 +53,7 @@ AnimationStatus_t Enemy::move() {
         moveX(0);
     }
     m_movement = AnimationStatus_t::Walk;
- 
+
     setAnimationStatus(m_movement);
 
     return m_movement;

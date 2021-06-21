@@ -24,6 +24,7 @@ target_sources(House-Saver PRIVATE "main.cpp"
         "TakenObject.cpp"
         "MovingObject.cpp"
         "StaticObject.cpp"
+        "ShooterEnemy.cpp"
         "CollectMisson.cpp"
         "GameController.cpp"
         "ContactListener.cpp")

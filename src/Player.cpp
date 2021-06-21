@@ -103,10 +103,6 @@ sf::Keyboard::Key Player::use() {
 
 }
 //=========================================================================================
-void Player::drawBullet(sf::RenderWindow& window,sf::Time deltaTime) {
-    m_weapon.drawBullet(window,deltaTime);
-}
-//=========================================================================================
 bool Player::isDead(){
     if(m_stats.getLives() <= 0)
         return true;
@@ -142,9 +138,9 @@ void Player::endContact(Elevator * elevator) {
     m_elevator = nullptr;
 }
 //=========================================================================================
-void Player::draw(sf::RenderWindow & window) {
-    GameObject::draw(window);
-
+void Player::draw(sf::RenderWindow & window, sf::Time deltaTime) {
+    MovingObject::draw(window,deltaTime);
+    m_weapon.drawBullet(window, deltaTime);
     m_stats.display(window);
 }
 //=========================================================================================

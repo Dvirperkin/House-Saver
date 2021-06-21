@@ -6,10 +6,11 @@
 class Enemy : public MovingObject {
 public:
 
-    Enemy(const sf::Vector2f & pos, b2World &, const sf::Vector2f &);
-    virtual AnimationStatus_t move();
+    Enemy(const sf::Sprite & sprite, const sf::Vector2f & pos, b2World &,
+          const sf::Vector2f &, std::unique_ptr<Animation> = nullptr);
 
-    Objects_t getBodyType() const override { return ENEMY; };
+    virtual AnimationStatus_t move(sf::Vector2f);
+
     void setDirection(const b2Vec2&);
     b2Vec2 getDirection()const;
     void startContact(Player*);

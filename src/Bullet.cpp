@@ -1,7 +1,8 @@
 #include "Bullet.h"
 
 Bullet::Bullet(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension,
-               const Side_t& sideToShoot, const float & hitPoint):m_sideToShoot(sideToShoot), m_hitPoint(hitPoint),
+               const Side_t& sideToShoot, const float & hitPoint, const float & desiredVel):
+               m_sideToShoot(sideToShoot), m_desiredVel(desiredVel), m_hitPoint(hitPoint),
                MovingObject(Textures::texturesObject().getSprite(BULLET_T), pos, world,dimension){
     auto to_add = 0;
     if (m_sideToShoot == Side_t::RIGHT) {

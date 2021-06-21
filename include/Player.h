@@ -23,8 +23,7 @@ public:
     Door * getDoor() const {return m_door;}
     Elevator* getElevator() const { return m_elevator; }
 
-    void draw(sf::RenderWindow &);
-    void drawBullet(sf::RenderWindow &, sf::Time);
+    void draw(sf::RenderWindow &, sf::Time) override;
     bool isDead();
 
     //----------Contacts Section----------

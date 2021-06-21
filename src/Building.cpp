@@ -32,7 +32,8 @@ void Building::build(const buildingDec & building, const buildingsDec & rooms, P
                                                         sf::Vector2f(m_width ,m_height), playerStats);
                     break;
 
-                case ENEMY:
+                case KNIGHT_ENEMY:
+                case SHOOTER_ENEMY:
                     m_enemy.emplace_back(Factory<Enemy>::create(object, sf::Vector2f(col, row), m_world,
                                                                 sf::Vector2f(m_width ,m_height)));
                     break;
@@ -126,7 +127,7 @@ void Building::moveMovingObject() {
 
     for (auto i = 0; i < m_enemy.size() ;i++) {
         if (!m_enemy[i]->isDead())
-            m_enemy[i]->move();
+            m_enemy[i]->move(m_player->getPos());
         else {
             m_enemy.erase(m_enemy.begin() + i);
             --i;
@@ -208,11 +209,10 @@ void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
     }
 
     for (auto& enemy : m_enemy) {
-        enemy->draw(window);
+        enemy->draw(window, deltaTime);
         enemy->update(deltaTime, sf::Vector2f(m_width, m_height));
     }
-    m_player->draw(window);
+    m_player->draw(window, deltaTime);
     m_player->update(deltaTime, sf::Vector2f(m_width, m_height));
-    m_player->drawBullet(window, deltaTime);
 }
 //=============================================================================

@@ -6,7 +6,7 @@ class MovingObject : public GameObject {
 public:
     MovingObject(const sf::Sprite &, const sf::Vector2f &, b2World &, const sf::Vector2f &,
                  std::unique_ptr<Animation> = nullptr);
-
+    virtual void draw(sf::RenderWindow&, sf::Time);
     void moveX(float = 0);
     void moveY(float = 0);
     virtual Side_t opposite(enum Side_t side);

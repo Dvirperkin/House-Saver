@@ -7,6 +7,10 @@ MovingObject::MovingObject(const sf::Sprite &sprite, const sf::Vector2f & pos, b
 
 }
 //=====================================================================
+void MovingObject::draw(sf::RenderWindow& window, sf::Time deltaTime){
+    GameObject::draw(window);
+}
+//=====================================================================
 void MovingObject::moveX(float desiredVelX) {
     b2Vec2 vel = getBodyLinearVelocity();
     float velChangeX = desiredVelX - vel.x;

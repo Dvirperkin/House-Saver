@@ -69,6 +69,39 @@ namespace {
         return player;
     }
 
+    AnimationData shootingEnemyData() {
+        auto shootingEnemy = AnimationData{};
+
+        shootingEnemy.m_data[AnimationStatus_t::Walk].emplace_back(32, 1, 281, 363);
+        shootingEnemy.m_data[AnimationStatus_t::Walk].emplace_back(319, 1, 332, 365);
+        shootingEnemy.m_data[AnimationStatus_t::Walk].emplace_back(671, 1, 319, 385);
+        shootingEnemy.m_data[AnimationStatus_t::Walk].emplace_back(1, 418, 300, 398);
+        shootingEnemy.m_data[AnimationStatus_t::Walk].emplace_back(333, 419, 304, 390);
+        shootingEnemy.m_data[AnimationStatus_t::Walk].emplace_back(705, 418, 299, 415);
+
+
+        shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1031, 2, 362, 464);
+        shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1499, 2, 424, 464);
+        shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1001, 536, 443, 468);
+        shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1504, 536, 364, 466);
+
+
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1055, 1079, 174, 302);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1342, 1100, 211, 283);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1663, 1127, 285, 218);
+
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1002, 1418, 294, 195);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1358, 1420, 297, 195);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1700, 1442, 301, 171);
+
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1002, 1680, 303, 173);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1337, 1683, 300, 171);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1700, 1717, 306, 117);
+
+        return shootingEnemy;
+
+    }
+
     AnimationData keyData() {
         auto key = AnimationData{};
 
@@ -85,12 +118,12 @@ namespace {
         return key;
     }
 
-    AnimationData enemyData() {
+    AnimationData knightEnemyData() {
         auto enemy = AnimationData{};
 
         enemy.m_data[AnimationStatus_t::Idle].emplace_back(33, 4, 811, 562);
 
-        enemy.m_data[AnimationStatus_t::Walk].emplace_back(33,4,811, 562);
+        enemy.m_data[AnimationStatus_t::Walk].emplace_back(33, 4, 811, 562);
 
         return enemy;
 
@@ -145,7 +178,10 @@ Textures::Textures() {
     if (!m_textures[KEY_T].loadFromFile("Key.png")) {
         throw std::runtime_error("Can't load file");
     }
-    if (!m_textures[ENEMY_T].loadFromFile("Enemy.png")) {
+    if (!m_textures[KNIGHT_ENEMY_T].loadFromFile("KnightEnemy.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+    if (!m_textures[SHOOTER_ENEMY_T].loadFromFile("ShooterEnemy.png")) {
         throw std::runtime_error("Can't load file");
     }
     if (!m_textures[BULLET_T].loadFromFile("Bullet.png")) {
@@ -163,7 +199,8 @@ Textures::Textures() {
 
 
     m_animationsData[PLAYER_D] = playerData();
-    m_animationsData[ENEMY_D] = enemyData();
+    m_animationsData[KNIGHT_ENEMY_D] = knightEnemyData();
+    m_animationsData[SHOOTER_ENEMY_D] = shootingEnemyData();
     m_animationsData[KEY_D] = keyData();
     m_animationsData[ELEVATOR_D] = elevatorData();
     m_animationsData[DOOR_D] = doorData();
