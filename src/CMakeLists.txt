@@ -27,4 +27,8 @@ target_sources(House-Saver PRIVATE "main.cpp"
         "ShooterEnemy.cpp"
         "CollectMisson.cpp"
         "GameController.cpp"
-        "ContactListener.cpp")
+        "ContactListener.cpp"
+        "Gift.cpp"
+        "HpGift.cpp"
+        "LifeGift.cpp"
+        "BulletGift.cpp")

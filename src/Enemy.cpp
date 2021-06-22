@@ -23,8 +23,13 @@ Enemy::Enemy(const sf::Sprite & sprite, const sf::Vector2f & pos, b2World & worl
 }
 //=========================================================================================
 AnimationStatus_t Enemy::move(sf::Vector2f playerPosition) {
+    if (m_dir.x == 0)
+        m_movement = AnimationStatus_t::Shoot;
+    else
+        m_movement = AnimationStatus_t::Walk;
 
     if (m_hitted) {
+        m_movement = AnimationStatus_t::Hurt;
         moveX(HIT_MOVE*m_side);
         moveY(HIT_MOVE);
         m_hitted = false;
@@ -52,8 +57,7 @@ AnimationStatus_t Enemy::move(sf::Vector2f playerPosition) {
     else {
         moveX(0);
     }
-    m_movement = AnimationStatus_t::Walk;
-
+   
     setAnimationStatus(m_movement);
 
     return m_movement;

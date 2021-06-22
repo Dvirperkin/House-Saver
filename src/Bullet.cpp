@@ -6,12 +6,12 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & d
                MovingObject(Textures::texturesObject().getSprite(BULLET_T), pos, world,dimension){
     auto to_add = 0;
     if (m_sideToShoot == Side_t::RIGHT) {
-        m_desiredVel = 8;
+        m_desiredVel *= 1;
         to_add = getGlobalBounds().width / 2;
     }
         
     else {
-        m_desiredVel = -8;
+        m_desiredVel *= -1;
         to_add -= getGlobalBounds().width / 2;
         opposite(Side_t::LEFT);
     }

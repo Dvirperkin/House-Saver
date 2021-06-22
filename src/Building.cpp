@@ -1,4 +1,6 @@
 #include "Building.h"
+#include <ctime>
+
 
 Building::Building(const buildingDec & building, const buildingsDec& rooms,
                    PlayerStats & playerStats) : m_world({0, 9.8}){
@@ -15,7 +17,7 @@ Building::Building(const buildingDec & building, const buildingsDec& rooms,
 }
 //=============================================================================
 void Building::build(const buildingDec & building, const buildingsDec & rooms, PlayerStats & playerStats) {
-
+    
     m_staticObjects.resize(m_height);
 
     //Creates building objects.
@@ -41,6 +43,11 @@ void Building::build(const buildingDec & building, const buildingsDec & rooms, P
                 case KEY:
                     m_takenObjects.emplace_back(Factory<TakenObject>::create(object, sf::Vector2f(col, row),
                                                                               m_world, sf::Vector2f(m_width, m_height)));
+                    ++m_keys;
+                    break;
+
+                case GIFT:
+                    createGift(sf::Vector2f(col, row));
                     break;
 
                 case ELEVATOR:
@@ -78,6 +85,27 @@ void Building::createDoor(std::vector<building>::const_iterator & roomIt,
     ++roomIt;
 }
 //=============================================================================
+void Building::createGift(sf::Vector2f pos)
+{
+    auto randaom = rand() % 3;
+    switch (randaom) {
+    case 0:
+        m_takenObjects.emplace_back(Factory<TakenObject>::create(HP_GIFT, pos,
+            m_world, sf::Vector2f(m_width, m_height)));
+        break;
+    case 1:
+        m_takenObjects.emplace_back(Factory<TakenObject>::create(BULLET_GIFT, pos,
+            m_world, sf::Vector2f(m_width, m_height)));
+        break;
+    case 2:
+        m_takenObjects.emplace_back(Factory<TakenObject>::create(LIFE_GIFT, pos,
+            m_world, sf::Vector2f(m_width, m_height)));
+        break;
+    }
+    
+
+}
+//=============================================================================
 std::shared_ptr<Building> Building::buildRoom(PlayerStats & playerStats,
                                               const buildingDec & room,
                                               const buildingsDec & subRooms){
@@ -112,7 +140,7 @@ BuildingDetails Building::runBuilding(sf::RenderWindow& window) {
     moveMovingObject();
     action();
     changeView(window);
-
+    checkMissionStatus();
     return m_details;
 }
 //=============================================================================
@@ -138,7 +166,7 @@ void Building::moveMovingObject() {
 void Building::action() {
     auto PlayerAction = m_player->use();
 
-    if(PlayerAction == sf::Keyboard::F) {
+    if(PlayerAction == sf::Keyboard::E) {
         if(!m_player->getDoor()->isRoom()) {
             m_details.exit = true;
             return;
@@ -146,10 +174,10 @@ void Building::action() {
         m_inRoom = true;
     }
 
-    else if (PlayerAction == sf::Keyboard::E)
+    else if (PlayerAction == sf::Keyboard::W)
         m_player->setBodyPos(m_player->getElevator()->getElevatorDestinationUp());
 
-    else if (PlayerAction == sf::Keyboard::Q)
+    else if (PlayerAction == sf::Keyboard::S)
         m_player->setBodyPos(m_player->getElevator()->getElevatorDestinationDown());
 
 }
@@ -178,6 +206,19 @@ void Building::changeView(sf::RenderWindow & window) {
     window.setView(view);
 }
 //=============================================================================
+void Building::checkMissionStatus()
+{
+    if (m_enemy.size() == 0)
+        m_details.m_killAllEnemy = true;    
+    if (m_keys == 0)
+        m_details.m_allKeyCollected = true;
+    for (auto& door : m_doors) {
+        if (!door->roomMissionComplete())
+            return;
+    }
+    m_details.m_missionComplete = true;
+}
+//=============================================================================
 void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
     if (m_inRoom) {
         m_player->getDoor()->drawRoom(window, deltaTime);
@@ -196,8 +237,13 @@ void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
             m_takenObjects[i]->draw(window);
             m_takenObjects[i]->update(deltaTime, sf::Vector2f(m_width, m_height));
         }
-        else
+        else {
+            if (m_takenObjects[i]->getBodyType() == KEY)
+                --m_keys;
             m_takenObjects.erase(m_takenObjects.begin() + i);
+            
+        }
+
     }
     for (auto & staticObjectLine : m_staticObjects) {
         for (auto& staticObject : staticObjectLine) {

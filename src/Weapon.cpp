@@ -40,4 +40,8 @@ void Weapon::drawBullet(sf::RenderWindow& window, sf::Time deltaTime) {
         bullet->update(deltaTime, m_dimension);
     }
 }
+void Weapon::increaseBulletDamage()
+{
+    m_bulletDamage += 5;
+}
 //===============================================================

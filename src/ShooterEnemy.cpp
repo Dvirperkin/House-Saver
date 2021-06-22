@@ -15,24 +15,24 @@ ShooterEnemy::ShooterEnemy(const sf::Vector2f& pos, b2World& world, const sf::Ve
                                       AnimationStatus_t::Walk,
                                       getSprite(), dimension)) {
     m_weapon.setFireRate(0.7f);
-    m_weapon.setBulletVelocity(2);
-
-
+    m_weapon.setBulletVelocity(4.5);
 }
 //=============================================================================
 AnimationStatus_t ShooterEnemy::move(sf::Vector2f playerPosition) {
 
     b2Vec2 desiredVel(0, 0);
-    if (getBody()->GetLinearVelocity().x >= 0)
+    if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10 &&
+        (getPos().x - playerPosition.x < 300 && getPos().x - playerPosition.x > -300)) {
+        m_weapon.shoot(getPos(), *getBody()->GetWorld(), FindDirectionToShoot(playerPosition));
+        desiredVel.x = 0;
+    }
+    else if (getBody()->GetLinearVelocity().x >= 0)
         desiredVel.x = 2;
 
     else
         desiredVel.x = -2;
 
-    if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10 &&
-        (getPos().x - playerPosition.x < 300 && getPos().x - playerPosition.x > -300)) {
-        m_weapon.shoot(getPos(), *getBody()->GetWorld(), FindDirectionToShoot(playerPosition));
-    }
+
     m_weapon.bulletCheck();
     setDirection(desiredVel);
     return Enemy::move(playerPosition);

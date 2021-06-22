@@ -21,6 +21,14 @@ bool Door::isRoom() const{
     return false;
 }
 //=============================================================================
+bool Door::roomMissionComplete() const
+{
+    if(m_building)
+        return m_building->missionComplete();
+
+    return true;
+}
+//=============================================================================
 void Door::drawRoom(sf::RenderWindow& window,sf::Time deltaTime) {
     m_building->draw(window, deltaTime);
 }

@@ -68,9 +68,18 @@ void ContactListener::playerStartContact(Player * player, GameObject * gameObjec
         case KEY:
             player->startContact(static_cast<Key *>(gameObject));
             break;
+        case HP_GIFT:
+            player->startContact(static_cast<HpGift *>(gameObject));
+            break;
+        case BULLET_GIFT:
+            player->startContact(static_cast<BulletGift *>(gameObject));
+            break;
+        case LIFE_GIFT:
+            player->startContact(static_cast<LifeGift *>(gameObject));
+            break;
         case KNIGHT_ENEMY:
         case SHOOTER_ENEMY:
-            player->startContact(static_cast<Enemy*>(gameObject));
+            player->startContact(static_cast<Enemy *>(gameObject));
             break;
         case DOOR:
             player->startContact(static_cast<Door *>(gameObject));

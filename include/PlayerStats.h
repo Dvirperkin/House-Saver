@@ -12,12 +12,15 @@ public:
 	PlayerStats();
 	void keyCollected();
 
-	int getLives() const { return m_lives.first; };
-	int getHP() const { return m_lives.second; };
-
+	int getLives() const { return m_lives.first; }
+	int getHP() const { return m_lives.second; }
+	int getKeys()const { return m_keyCollected; }
 	void addScore(const int);
 	void decreaseHP(const int);
-	
+	void increaseHP();
+
+	void increaseLife();
+
 	void display(sf::RenderWindow&);
 	void drawDetail(sf::RenderWindow&, const std::string &, PlayerStats_t);
 

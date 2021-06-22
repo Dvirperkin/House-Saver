@@ -1,7 +1,7 @@
 #include "GamePlay.h"
 
 GamePlay::GamePlay() : m_lastHouse(0), m_houseFile(HOUSES){
-
+    srand(time(NULL));
     buildHouses();
 }
 //=============================================================================
@@ -14,7 +14,13 @@ void GamePlay::buildHouses() {
 //=============================================================================
 enum ScreenType_t GamePlay::display(sf::RenderWindow & window) {
 
-    m_house[m_lastHouse]->runBuilding(window);
+    auto houseDetails = m_house[m_lastHouse]->runBuilding(window);
+    if (houseDetails.m_missionComplete) {
+        if (++m_lastHouse == m_house.size()) {
+            return MAIN_MENU;
+        }
+        //win 1 house
+    }
     draw(window);
     return GAME_PLAY;
 }

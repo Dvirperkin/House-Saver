@@ -5,12 +5,17 @@
 #include "AnimationData.h"
 #include "Textures.h"
 
+// A class that implement animation for creating game objects animation.
+
 class Animation
 {
 public:
+    //Constructor 
     Animation(const AnimationData& data, AnimationStatus_t dir, sf::Sprite& sprite, const sf::Vector2f&);
-    void setStatus(AnimationStatus_t dir);
-    void update(sf::Time delta);
+
+    void setStatus(AnimationStatus_t dir); //Set animation status
+    
+    void update(sf::Time delta); // Update animation figure
 
 private:
     void update();

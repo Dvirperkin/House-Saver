@@ -14,6 +14,7 @@ void Animation::setStatus(AnimationStatus_t status){
     update();
 }
 //=============================================================================
+//That Function updates the index of the sprite sheet
 void Animation::update(sf::Time delta){
     m_elapsed += delta;
 
@@ -33,6 +34,7 @@ void Animation::update(sf::Time delta){
     }
 }
 //=============================================================================
+//That Function updates the scale of the correct rectangle in the sprite sheet
 void Animation::update(){
     m_sprite.setTextureRect(m_data.m_data.find(m_status)->second[m_index]);
 

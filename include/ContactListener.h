@@ -5,7 +5,9 @@
 #include "Enemy.h"
 #include "Elevator.h"
 #include "Key.h"
-
+#include "HpGift.h"
+#include "BulletGift.h"
+#include "LifeGift.h"
 
 class ContactListener : public b2ContactListener{
 public:

@@ -10,6 +10,9 @@
 #include "Bullet.h"
 #include "Elevator.h"
 #include "KnightEnemy.h"
+#include "BulletGift.h"
+#include "HpGift.h"
+#include "LifeGift.h"
 
 // A class that implement factory for creating game objects.
 
@@ -29,7 +32,7 @@ private:
         return map;
     }
 };
-
+//=============================================================================
 template<typename T>
 std::shared_ptr<T> Factory<T>::create(const char & name, const sf::Vector2f & pos, b2World & world,
                                       const sf::Vector2f & dimension) {
@@ -39,6 +42,7 @@ std::shared_ptr<T> Factory<T>::create(const char & name, const sf::Vector2f & po
         return nullptr;
     return it->second(pos, world, dimension);
 }
+
 //=============================================================================
 template<typename T>
 bool Factory<T>::registerObject(const char & name, Factory::pFnc func) {

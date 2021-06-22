@@ -19,6 +19,7 @@ public:
 
     Objects_t getBodyType() const override {return DOOR;}
     bool isRoom() const;
+    bool roomMissionComplete() const;
 
 private:
     static bool m_registerIt;
