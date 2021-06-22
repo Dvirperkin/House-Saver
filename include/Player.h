@@ -5,10 +5,13 @@
 #include "Weapon.h"
 #include "Bullet.h"
 
+
 class Key;
 class Elevator;
 class Door;
-
+class HpGift;
+class BulletGift;
+class LifeGift;
 // A class that represents a player.
 
 class Player : public MovingObject {
@@ -22,7 +25,7 @@ public:
     Objects_t getBodyType() const override {return PLAYER;};
     Door * getDoor() const {return m_door;}
     Elevator* getElevator() const { return m_elevator; }
-
+    int getKeyCollected() const;
     void draw(sf::RenderWindow &, sf::Time) override;
     bool isDead();
 
@@ -31,6 +34,9 @@ public:
     void startContact(Enemy *);
     void startContact(Door *);
 	void startContact(Elevator *);
+    void startContact(HpGift *);
+    void startContact(BulletGift *);
+    void startContact(LifeGift *);
 
     void endContact(Door *);
 	void endContact(Elevator *);

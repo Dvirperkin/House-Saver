@@ -84,7 +84,8 @@ namespace {
         shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1499, 2, 424, 464);
         shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1001, 536, 443, 468);
         shootingEnemy.m_data[AnimationStatus_t::Shoot].emplace_back(1504, 536, 364, 466);
-
+        
+        shootingEnemy.m_data[AnimationStatus_t::Hurt].emplace_back(1055, 1079, 174, 302);
 
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1055, 1079, 174, 302);
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1342, 1100, 211, 283);
@@ -97,6 +98,7 @@ namespace {
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1002, 1680, 303, 173);
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1337, 1683, 300, 171);
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1700, 1717, 306, 117);
+        
 
         return shootingEnemy;
 
@@ -119,14 +121,42 @@ namespace {
     }
 
     AnimationData knightEnemyData() {
-        auto enemy = AnimationData{};
+        auto knightEnemyData = AnimationData{};
+        
+        knightEnemyData.m_data[AnimationStatus_t::Idle].emplace_back(10, 10, 108, 174);
 
-        enemy.m_data[AnimationStatus_t::Idle].emplace_back(33, 4, 811, 562);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(10, 10, 108, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(145, 8, 95, 176);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(280, 6, 81, 178);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(408, 1, 84, 183);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(536, 2, 80, 181);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(664, 2, 89, 180);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(17, 192, 103, 176);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(138, 194, 109, 173);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(273, 192, 95, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(410, 190, 81, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(536, 185, 85, 178);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(664, 186, 84, 177);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(24, 374, 89, 176);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(152, 376, 102, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(280, 378, 108, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(408, 376, 95, 176);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(536, 374, 84, 178);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(664, 369, 84, 183);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(24, 554, 84, 181);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(152, 555, 89, 180);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(280, 560, 102, 176);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(408, 562, 108, 173);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(536, 560, 95, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(664, 558, 81, 174);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(24, 737, 85, 178);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(152, 738, 85, 177);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(279, 739, 89, 175);
+        knightEnemyData.m_data[AnimationStatus_t::Walk].emplace_back(401, 744, 101, 174);
+        
+        knightEnemyData.m_data[AnimationStatus_t::Hurt].emplace_back(10, 10, 108, 174);
 
-        enemy.m_data[AnimationStatus_t::Walk].emplace_back(33, 4, 811, 562);
-
-        return enemy;
-
+        return knightEnemyData;
     }
 
     AnimationData elevatorData() {
@@ -159,6 +189,42 @@ namespace {
         door.m_data[AnimationStatus_t::Close].emplace_back(192, 78, 48, 76);
 
         return door;
+    }
+    AnimationData hpGiftData() {
+        auto hpGift = AnimationData{};
+
+        hpGift.m_data[AnimationStatus_t::Idle].emplace_back(68, 90, 197, 173);
+        hpGift.m_data[AnimationStatus_t::Idle].emplace_back(312, 92, 177, 179);
+        hpGift.m_data[AnimationStatus_t::Idle].emplace_back(540, 85, 144, 183);
+        hpGift.m_data[AnimationStatus_t::Idle].emplace_back(720, 89, 86, 187);
+        hpGift.m_data[AnimationStatus_t::Idle].emplace_back(840, 89, 135, 185);
+        hpGift.m_data[AnimationStatus_t::Idle].emplace_back(1014, 89, 180, 180);
+
+        return hpGift;
+    }
+    AnimationData lifeGiftData() {
+        auto lifeGift = AnimationData{};
+
+        //need to fix
+
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(892, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(1719, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(2562, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(3404, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(4234, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(3404, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(2562, 174, 627, 528);
+        lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(1719, 174, 627, 528);
+
+        return lifeGift;
+    }
+    AnimationData bulletGiftData() {
+        auto bulletGift = AnimationData{};
+
+        //need to fix
+        bulletGift.m_data[AnimationStatus_t::Idle].emplace_back(9, 17, 314, 180);
+
+        return bulletGift;
     }
 }
 //===========================
@@ -196,7 +262,15 @@ Textures::Textures() {
     if (!m_textures[STAT_BACKGROUND_T].loadFromFile("StatBackGround.png")) {
         throw std::runtime_error("Can't load file");
     }
-
+    if (!m_textures[HP_GIFT_T].loadFromFile("HpGift.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+    if (!m_textures[LIFE_GIFT_T].loadFromFile("LifeGift.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+    if (!m_textures[BULLET_GIFT_T].loadFromFile("BulletGift.png")) {
+        throw std::runtime_error("Can't load file");
+    }
 
     m_animationsData[PLAYER_D] = playerData();
     m_animationsData[KNIGHT_ENEMY_D] = knightEnemyData();
@@ -204,6 +278,9 @@ Textures::Textures() {
     m_animationsData[KEY_D] = keyData();
     m_animationsData[ELEVATOR_D] = elevatorData();
     m_animationsData[DOOR_D] = doorData();
+    m_animationsData[HP_GIFT_D] = hpGiftData();
+    m_animationsData[LIFE_GIFT_D] = lifeGiftData();
+    m_animationsData[BULLET_GIFT_D] = bulletGiftData();
 }
 //=============================================================================
 Textures& Textures::texturesObject() {

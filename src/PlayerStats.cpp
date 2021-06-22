@@ -1,6 +1,6 @@
 #include "PlayerStats.h"
 
-PlayerStats::PlayerStats(): m_score(0), m_lives(3, 100), m_keyCollected(0){
+PlayerStats::PlayerStats(): m_score(0), m_lives(START_LIVES, START_HP), m_keyCollected(0){
 	m_details.resize(NUM_OF_DETAILS);
 }
 //=============================================================================
@@ -17,9 +17,24 @@ void PlayerStats::decreaseHP(const int hitPoint) {
     }
 }
 //=============================================================================
+void PlayerStats::increaseHP()
+{
+    m_lives.second += HP_INCREASE;
+    ;
+    if (m_lives.second > START_HP)
+        m_lives.second = START_HP;
+}
+//=============================================================================
+void PlayerStats::increaseLife()
+{
+    m_lives.first += 1;
+    if (m_lives.first > MAX_LIVES)
+        m_lives.first = MAX_LIVES;
+}
+//=============================================================================
 void PlayerStats::keyCollected(){
 	++m_keyCollected;
-	addScore(50);
+	addScore(SCORE_INCREASE);
 }
 //=============================================================================
 void PlayerStats::display(sf::RenderWindow& window){

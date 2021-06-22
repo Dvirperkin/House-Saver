@@ -23,14 +23,14 @@ Player::Player(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & d
     rigidBody(world, position, fixtureDef, b2_dynamicBody);
 
     setUserData();
-
+    //m_weapon.setBulletVelocity(8);
     setFixedRotation(true);
 }
 //=========================================================================================
 void Player::move() {
 
     // Player Jump.
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)
         && m_movement != AnimationStatus_t::Jump && m_movement != AnimationStatus_t::Falling && m_movement != AnimationStatus_t::Shoot) {
         moveY(-DESIRED_VEL);
     }
@@ -83,19 +83,19 @@ sf::Keyboard::Key Player::use() {
         return sf::Keyboard::Unknown;
 
     // The player uses an elevator.
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         if(m_elevator && m_elevator->destinationUP()) {
-            return sf::Keyboard::E;
+            return sf::Keyboard::W;
         }
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         if(m_elevator && m_elevator->destinationDown()) {
-            return sf::Keyboard::Q;
+            return sf::Keyboard::S;
         }
     }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::F)){
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
         if (m_door)
-            return sf::Keyboard::F;
+            return sf::Keyboard::E;
     }
 
     clock.restart();
@@ -109,12 +109,12 @@ bool Player::isDead(){
     return false;
 }
 //=========================================================================================
-void Player::startContact(Key* key) {
+void Player::startContact(Key * key) {
     m_stats.keyCollected();
     key->take();
 }
 //=========================================================================================
-void Player::startContact(Enemy* enemy) {
+void Player::startContact(Enemy * enemy) {
     m_stats.decreaseHP(enemy->getHit());
 }
 //=========================================================================================
@@ -123,9 +123,29 @@ void Player::startContact(Door * door) {
     m_door = door;
 }
 //=========================================================================================
-void Player::startContact(Elevator* elevator) {
+void Player::startContact(Elevator * elevator) {
     elevator->open();
     m_elevator = elevator;
+}
+//=========================================================================================
+void Player::startContact(HpGift * gift)
+{
+    m_stats.increaseHP();
+    gift->take();
+}
+//=========================================================================================
+void Player::startContact(BulletGift * gift)
+{
+    m_stats.addScore(SCORE_INCREASE);
+    m_weapon.increaseBulletDamage();
+    gift->take();
+}
+//=========================================================================================
+void Player::startContact(LifeGift * gift)
+{
+    m_stats.addScore(SCORE_INCREASE);
+    m_stats.increaseLife();
+    gift->take();
 }
 //=========================================================================================
 void Player::endContact(Door * door) {
@@ -136,6 +156,10 @@ void Player::endContact(Door * door) {
 void Player::endContact(Elevator * elevator) {
     elevator->close();
     m_elevator = nullptr;
+}
+int Player::getKeyCollected() const
+{
+    return m_stats.getKeys();
 }
 //=========================================================================================
 void Player::draw(sf::RenderWindow & window, sf::Time deltaTime) {
