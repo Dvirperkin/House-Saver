@@ -9,13 +9,13 @@ bool ShooterEnemy::m_registerIt = Factory<Enemy>::registerObject(SHOOTER_ENEMY, 
         return std::make_shared<ShooterEnemy>(pos, world, dimension);
 });
 //=============================================================================
-ShooterEnemy::ShooterEnemy(const sf::Vector2f& pos, b2World& world, const sf::Vector2f& dimension) :m_weapon(dimension),
+ShooterEnemy::ShooterEnemy(const sf::Vector2f& pos, b2World& world, const sf::Vector2f& dimension) :m_weapon(dimension,-1),
     Enemy(Textures::texturesObject().getSprite(SHOOTER_ENEMY_T), pos, world, dimension,
           std::make_unique<Animation>(Textures::texturesObject().animationData(SHOOTER_ENEMY_D),
                                       AnimationStatus_t::Walk,
                                       getSprite(), dimension)) {
     m_weapon.setFireRate(0.7f);
-    m_weapon.setBulletVelocity(4.5);
+    m_weapon.setBulletVelocity(6);
 }
 //=============================================================================
 AnimationStatus_t ShooterEnemy::move(sf::Vector2f playerPosition) {
@@ -23,6 +23,7 @@ AnimationStatus_t ShooterEnemy::move(sf::Vector2f playerPosition) {
     b2Vec2 desiredVel(0, 0);
     if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10 &&
         (getPos().x - playerPosition.x < 300 && getPos().x - playerPosition.x > -300)) {
+        Sounds::soundObject().playSound(Sounds_t::SHOOT_SOUND);
         m_weapon.shoot(getPos(), *getBody()->GetWorld(), FindDirectionToShoot(playerPosition));
         desiredVel.x = 0;
     }

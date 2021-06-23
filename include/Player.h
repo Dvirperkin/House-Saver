@@ -36,6 +36,7 @@ public:
 	void startContact(Elevator *);
     void startContact(HpGift *);
     void startContact(BulletGift *);
+	void startContact(Bullet *);
     void startContact(LifeGift *);
 
     void endContact(Door *);

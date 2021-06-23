@@ -24,7 +24,8 @@ void Animation::update(sf::Time delta){
         ++m_index;
 
         if(m_status == AnimationStatus_t::Jump || m_status == AnimationStatus_t::Falling ||
-            m_status == AnimationStatus_t::Open || m_status == AnimationStatus_t::Close){
+            m_status == AnimationStatus_t::Open || m_status == AnimationStatus_t::Close ||
+            m_status == AnimationStatus_t::Death){
             if(m_index == m_data.m_data.find(m_status)->second.size())
                 --m_index;
         }

@@ -39,17 +39,18 @@ namespace {
         player.m_data[AnimationStatus_t::Shoot].emplace_back(539, 1260, 474, 482);
         player.m_data[AnimationStatus_t::Shoot].emplace_back(59, 1784, 465, 480);
         player.m_data[AnimationStatus_t::Shoot].emplace_back(535, 1788, 455, 480);
-        /*player.m_data[AnimationStatus_t::Hurt].emplace_back(,,,);
+        
+        //player.m_data[AnimationStatus_t::Hurt].emplace_back(,,,);
 
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Death].emplace_back(,,,);*/
+        player.m_data[AnimationStatus_t::Death].emplace_back(58,2413,195,286);
+        player.m_data[AnimationStatus_t::Death].emplace_back(357,2438,243,250);
+        player.m_data[AnimationStatus_t::Death].emplace_back(717,2410,286, 234);
+        player.m_data[AnimationStatus_t::Death].emplace_back(50,2772,285,246);
+        player.m_data[AnimationStatus_t::Death].emplace_back(361,2772,282,246);
+        player.m_data[AnimationStatus_t::Death].emplace_back(684,2775,294,211);
+        player.m_data[AnimationStatus_t::Death].emplace_back(50,3087,291,212);
+        player.m_data[AnimationStatus_t::Death].emplace_back(393,3087,292,212);
+        player.m_data[AnimationStatus_t::Death].emplace_back(727,3087,325,212);
 
 
 
@@ -271,6 +272,10 @@ Textures::Textures() {
     if (!m_textures[BULLET_GIFT_T].loadFromFile("BulletGift.png")) {
         throw std::runtime_error("Can't load file");
     }
+    if (!m_textures[MenuBackGround].loadFromFile("MenuBackGround.png")) {
+        throw std::runtime_error("Can't load file");
+    }
+
 
     m_animationsData[PLAYER_D] = playerData();
     m_animationsData[KNIGHT_ENEMY_D] = knightEnemyData();

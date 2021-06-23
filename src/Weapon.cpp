@@ -1,6 +1,6 @@
 #include "Weapon.h"
 
-Weapon::Weapon(const sf::Vector2f & dimension):m_fireRate(START_FIRE_RATE),
+Weapon::Weapon(const sf::Vector2f & dimension,const int toHit):m_fireRate(START_FIRE_RATE),m_toHit(toHit),
                                             m_bulletDamage(START_BULLET_DAMAGE), m_dimension(dimension){}
 //===============================================================
 void Weapon::shoot(sf::Vector2f pos, b2World & world, Side_t side){
@@ -8,7 +8,7 @@ void Weapon::shoot(sf::Vector2f pos, b2World & world, Side_t side){
     if (m_clock.getElapsedTime().asSeconds() >= m_fireRate) {
         m_bullets.emplace_back(std::make_unique<Bullet>(pos, world,
                                                         m_dimension,
-                                                        side, m_bulletDamage, m_bulletVelocity));
+                                                        side, m_bulletDamage, m_bulletVelocity,m_toHit));
         m_clock.restart();
     } 
 }
@@ -40,6 +40,7 @@ void Weapon::drawBullet(sf::RenderWindow& window, sf::Time deltaTime) {
         bullet->update(deltaTime, m_dimension);
     }
 }
+//===============================================================
 void Weapon::increaseBulletDamage()
 {
     m_bulletDamage += 5;

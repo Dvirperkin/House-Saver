@@ -1,7 +1,7 @@
 #include "Bullet.h"
 
 Bullet::Bullet(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension,
-               const Side_t& sideToShoot, const float & hitPoint, const float & desiredVel):
+               const Side_t& sideToShoot, const float & hitPoint, const float & desiredVel,const int toHit):
                m_sideToShoot(sideToShoot), m_desiredVel(desiredVel), m_hitPoint(hitPoint),
                MovingObject(Textures::texturesObject().getSprite(BULLET_T), pos, world,dimension){
     auto to_add = 0;
@@ -29,6 +29,7 @@ Bullet::Bullet(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & d
     fixtureDef.density = 2.f;
     fixtureDef.friction = 2.f;
     fixtureDef.isSensor = 1;
+    fixtureDef.filter.groupIndex = toHit;
     rigidBody(world, position, fixtureDef, b2_dynamicBody);
 
     setUserData();

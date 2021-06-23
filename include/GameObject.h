@@ -6,6 +6,7 @@
 #include "box2d/box2d.h"
 #include "Animation.h"
 #include "Textures.h"
+#include "Sounds.h"
 
 class GameObject {
 public:

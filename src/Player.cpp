@@ -8,7 +8,7 @@
 Player::Player(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension, PlayerStats & playerStats) :
     MovingObject(Textures::texturesObject().getSprite(PLAYER_T), pos, world,dimension,
                  std::make_unique<Animation>(Textures::texturesObject().animationData(PLAYER_D),
-                                             AnimationStatus_t::Idle, getSprite(), dimension)),m_weapon(dimension),
+                                             AnimationStatus_t::Idle, getSprite(), dimension)),m_weapon(dimension, -2),
                                              m_stats(playerStats){
     b2Vec2 position(pos.x, pos.y);
 
@@ -19,6 +19,7 @@ Player::Player(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & d
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 2.f;
     fixtureDef.friction = 0.f;
+    fixtureDef.filter.groupIndex = -2;
 
     rigidBody(world, position, fixtureDef, b2_dynamicBody);
 
@@ -53,6 +54,7 @@ void Player::move() {
 
     // The player fires.
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) {
+        Sounds::soundObject().playSound(Sounds_t::SHOOT_SOUND);
         m_weapon.shoot(getPos(), *getBody()->GetWorld(), m_side);
         m_movement = AnimationStatus_t::Shoot;
     }
@@ -104,8 +106,10 @@ sf::Keyboard::Key Player::use() {
 }
 //=========================================================================================
 bool Player::isDead(){
-    if(m_stats.getLives() <= 0)
+    if (m_stats.getLives() <= 0) {
+        Sounds::soundObject().playSound(DEATH_SOUND);
         return true;
+    }
     return false;
 }
 //=========================================================================================
@@ -119,11 +123,13 @@ void Player::startContact(Enemy * enemy) {
 }
 //=========================================================================================
 void Player::startContact(Door * door) {
+    Sounds::soundObject().playSound(DOOR_SOUND);
     door->open();
     m_door = door;
 }
 //=========================================================================================
 void Player::startContact(Elevator * elevator) {
+    Sounds::soundObject().playSound(ELEVATOR_SOUND);
     elevator->open();
     m_elevator = elevator;
 }
@@ -136,9 +142,15 @@ void Player::startContact(HpGift * gift)
 //=========================================================================================
 void Player::startContact(BulletGift * gift)
 {
+    Sounds::soundObject().playSound(GIFT_SOUND);
     m_stats.addScore(SCORE_INCREASE);
     m_weapon.increaseBulletDamage();
     gift->take();
+}
+//=========================================================================================
+void Player::startContact(Bullet* bullet) {
+    m_stats.decreaseHP(bullet->getHit());
+    bullet->hit();
 }
 //=========================================================================================
 void Player::startContact(LifeGift * gift)
@@ -157,6 +169,7 @@ void Player::endContact(Elevator * elevator) {
     elevator->close();
     m_elevator = nullptr;
 }
+//=========================================================================================
 int Player::getKeyCollected() const
 {
     return m_stats.getKeys();

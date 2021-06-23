@@ -51,8 +51,9 @@ private:
                     sf::Vector2f,
                     PlayerStats &); // Creates a room for door
     void createGift(sf::Vector2f);
-    void moveMovingObject(); // Moves The moving object inside the building
+    void moveMovingObject(sf::RenderWindow &); // Moves The moving object inside the building
     void action(); // Manage the player actions
     void changeView(sf::RenderWindow & window); // Change the view of the camera
     void checkMissionStatus();
+    void GameOver(sf::RenderWindow & window);
 };

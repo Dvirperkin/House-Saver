@@ -7,7 +7,7 @@
 class Enemy;
 class Bullet : public MovingObject{
 public:
-    Bullet(const sf::Vector2f &, b2World &, const sf::Vector2f &, const Side_t &, const float &, const float &);
+    Bullet(const sf::Vector2f &, b2World &, const sf::Vector2f &, const Side_t &, const float &, const float &,const int);
     Objects_t getBodyType()const override { return BULLET; }
     bool shoot();
     void hit() { m_disposed = true; }

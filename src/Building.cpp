@@ -114,7 +114,7 @@ std::shared_ptr<Building> Building::buildRoom(PlayerStats & playerStats,
 }
 //=============================================================================
 void Building::createElevator(sf::Vector2f pos) {
-    static auto index = -1;
+    auto index = m_elevators.size() - 1;
 
     m_elevators.emplace_back(std::make_shared<Elevator>(pos, m_world,
                                                         sf::Vector2f (m_width, m_height)));
@@ -137,20 +137,22 @@ BuildingDetails Building::runBuilding(sf::RenderWindow& window) {
         return m_details;
     }
     m_world.Step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-    moveMovingObject();
+    moveMovingObject(window);
     action();
     changeView(window);
     checkMissionStatus();
     return m_details;
 }
 //=============================================================================
-void Building::moveMovingObject() {
+void Building::moveMovingObject(sf::RenderWindow & window) {
 
     if (!m_player->isDead()) {
         m_player->move();
     }
-    else
-        std::cout << "Player Dead\n";
+    else {   
+        m_details.m_GameOver = true;
+        GameOver(window);
+    }
 
 
     for (auto i = 0; i < m_enemy.size() ;i++) {
@@ -216,7 +218,8 @@ void Building::checkMissionStatus()
         if (!door->roomMissionComplete())
             return;
     }
-    m_details.m_missionComplete = true;
+    if(m_details.m_killAllEnemy && m_details.m_allKeyCollected)
+        m_details.m_missionComplete = true;
 }
 //=============================================================================
 void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
@@ -262,3 +265,13 @@ void Building::draw(sf::RenderWindow& window, const sf::Time & deltaTime) {
     m_player->update(deltaTime, sf::Vector2f(m_width, m_height));
 }
 //=============================================================================
+void Building::GameOver(sf::RenderWindow & window) {
+    auto clock = sf::Clock();
+    auto animationTime = sf::Clock();
+    m_player->setAnimationStatus(AnimationStatus_t::Death);
+    while (animationTime.getElapsedTime().asSeconds() <= 2) {
+        window.clear();
+        draw(window,clock.restart());
+        window.display();
+    }
+}

@@ -4,7 +4,7 @@
 Enemy::Enemy(const sf::Sprite & sprite, const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension,
              std::unique_ptr<Animation> animation) :
     MovingObject(sprite, pos, world, dimension,
-                 std::move(animation)), m_dir(0,0) ,m_hp(300){
+                 std::move(animation)), m_dir(0,0) ,m_hp(100){
     b2Vec2 position(pos.x, pos.y);
 
     b2CircleShape circleShape;
@@ -15,6 +15,7 @@ Enemy::Enemy(const sf::Sprite & sprite, const sf::Vector2f & pos, b2World & worl
     fixtureDef.density = 2.f;
     fixtureDef.friction = 0.f;
     fixtureDef.restitution = 0.2f;
+    fixtureDef.filter.groupIndex = -1;
     rigidBody(world, position, fixtureDef, b2_dynamicBody);
 
     setUserData();
@@ -34,7 +35,7 @@ AnimationStatus_t Enemy::move(sf::Vector2f playerPosition) {
         moveY(HIT_MOVE);
         m_hitted = false;
     }
-    if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10) {
+    if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10 && m_movement != AnimationStatus_t::Shoot) {
         if (playerPosition.x < getPos().x) {
             m_dir.x = -2;
         }
@@ -42,15 +43,15 @@ AnimationStatus_t Enemy::move(sf::Vector2f playerPosition) {
             m_dir.x = 2;
         }
     }
-    if (m_dir.y < 0){
+    if (m_dir.y < 0 && m_movement != AnimationStatus_t::Shoot){
         moveY(m_dir.y);
     }
-    else if (m_dir.x < 0 ) {
+    else if (m_dir.x < 0 && m_movement != AnimationStatus_t::Shoot) {
         moveX(m_dir.x);
         opposite(Side_t::LEFT);
     }
 
-    else if (m_dir.x > 0) {
+    else if (m_dir.x > 0 && m_movement != AnimationStatus_t::Shoot) {
         moveX(m_dir.x);
         opposite(Side_t::RIGHT);
     }

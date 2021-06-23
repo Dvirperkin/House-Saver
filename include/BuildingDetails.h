@@ -9,4 +9,5 @@ struct BuildingDetails{
     bool m_allKeyCollected = false;
     bool m_killAllEnemy = false;
     bool m_missionComplete = false;
+    bool m_GameOver = false;
 };

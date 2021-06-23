@@ -84,6 +84,9 @@ void ContactListener::playerStartContact(Player * player, GameObject * gameObjec
         case DOOR:
             player->startContact(static_cast<Door *>(gameObject));
             break;
+        case BULLET:
+            player->startContact(static_cast<Bullet*>(gameObject));
+            break;
         case ELEVATOR:
             player->startContact(static_cast<Elevator *>(gameObject));
             break;
@@ -111,6 +114,7 @@ void ContactListener::enemyStartContact(Enemy * enemy, GameObject * gameObject) 
             static_cast<Player *>(gameObject)->startContact(enemy);
             break;
         case BULLET:
+            auto bullet = static_cast<Bullet*>(gameObject);
             enemy->startContact(static_cast<Bullet *>(gameObject));
             break;
     }
