@@ -14,6 +14,7 @@ class HousesFile {
 public:
     HousesFile(const std::string &);
     std::pair<buildingDec, buildingsDec> getHouse();
+    void lseek(int house = 0) {m_currHouse = house;}
     bool eof() const;
 
 private:

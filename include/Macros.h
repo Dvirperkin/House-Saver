@@ -72,6 +72,13 @@ const auto DEATH_SIZE = sf::Vector2i(40, 24);
 //--------------------Key Sprite Sheet Section--------------------
 const auto KEY_SIZE = sf::Vector2i(30, 50);
 
+//--------------------Menu Button Section--------------------
+const int BUTTON_WIDTH = WINDOW_SIZE.first / 3;
+const int BUTTON_HEIGHT = 100;
+const int BUTTON_CHAR_SIZE = 70;
+const int THICKNESS = 7;
+const int NO_THICKNESS = 0;
+
 
 const sf::Vector2f ANTI_GRAVITY(0, -0.15f);
 const auto GRAY = sf::Color(150,150,150);

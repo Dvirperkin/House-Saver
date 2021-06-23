@@ -1,6 +1,7 @@
 #include "GamePlay.h"
 
-GamePlay::GamePlay() : m_lastHouse(0), m_houseFile(HOUSES){
+GamePlay::GamePlay(int pos) : Command(pos, "GamePlay"),
+                              m_currHouse(0), m_houseFile(HOUSES){
     srand(time(NULL));
     buildHouses();
 }
@@ -12,20 +13,69 @@ void GamePlay::buildHouses() {
     }
 }
 //=============================================================================
-enum ScreenType_t GamePlay::display(sf::RenderWindow & window) {
+bool GamePlay::execut(sf::RenderWindow & window) {
 
-    auto houseDetails = m_house[m_lastHouse]->runBuilding(window);
-    if (houseDetails.m_missionComplete) {
-        if (++m_lastHouse == m_house.size()) {
-            return MAIN_MENU;
+    m_clock.restart();
+
+    while(window.isOpen()) {
+        window.clear();
+
+        auto houseDetails = m_house[m_currHouse]->runBuilding(window);
+        if (houseDetails.m_GameOver) {
+            GameOver(window);
+            break;
         }
-        //win 1 house
+        if (houseDetails.m_missionComplete) {
+            if (++m_currHouse == m_house.size()) {
+                GameComplete(window);
+                break;
+            }
+        }
+        draw(window);
+
+        for(auto event = sf::Event{}; window.pollEvent(event);){
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    exit(EXIT_SUCCESS);
+                case sf::Event::KeyPressed:
+                    if(event.key.code == sf::Keyboard::Escape){}
+            }
+        }
+
+        window.display();
     }
-    draw(window);
-    return GAME_PLAY;
+
+    return true;
 }
 //=============================================================================
 void GamePlay::draw(sf::RenderWindow & window) {
-    m_house[m_lastHouse]->draw(window, m_clock.restart());
+    m_house[m_currHouse]->draw(window, m_clock.restart());
+}
+//=============================================================================
+void GamePlay::GameComplete(sf::RenderWindow &) {
+    restartGame();
+}
+//=============================================================================
+void GamePlay::GameOver(sf::RenderWindow &) {
+    restartGame();
+}
+//=============================================================================
+void GamePlay::restartGame() {
+
+    for(auto house = m_currHouse; house >= 0; --house){
+        m_houseFile.lseek(house);
+        auto houseDec = m_houseFile.getHouse();
+        m_house[house] = std::make_unique<Building>(houseDec.first, houseDec.second, m_playerStats);
+    }
+
+    m_currHouse = 0;
+    m_playerStats = PlayerStats();
+
+    buildHouses();
+}
+//=============================================================================
+void GamePlay::pauseMenu(sf::RenderWindow &) {
+
 }
 //=============================================================================

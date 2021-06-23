@@ -15,8 +15,10 @@ HousesFile::HousesFile(const std::string & fileName) : m_currHouse(0) {
     m_houses.resize(numOfHouses);
     m_rooms.resize(numOfHouses);
 
-    for(auto i = 0; i < numOfHouses; ++i)
+    for(auto i = 0; i < numOfHouses; ++i, ++m_currHouse)
         readBuilding(houseFile, Building_t::HOUSE);
+
+    m_currHouse = 0;
 }
 //=============================================================================
 void HousesFile::readBuilding(std::fstream & houseFile, enum Building_t building, int buildingNum) {

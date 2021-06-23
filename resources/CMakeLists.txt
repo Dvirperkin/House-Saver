@@ -17,6 +17,7 @@ configure_file (StatBackGround.png ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file (HpGift.png ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file (LifeGift.png ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file (BulletGift.png ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file (MenuBackGround.png ${CMAKE_BINARY_DIR} COPYONLY)
 
 # Sounds
 configure_file (door.ogg ${CMAKE_BINARY_DIR} COPYONLY)
