@@ -1,7 +1,6 @@
 #include "Font.h"
 
-Font::Font()
-{
+Font::Font(){
     if(!m_font.loadFromFile("impact.ttf"))
         throw std::runtime_error("impact.ttf is missing");
 }

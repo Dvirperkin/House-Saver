@@ -17,16 +17,6 @@ namespace {
         player.m_data[AnimationStatus_t::Walk].emplace_back(1602, 560, 397, 465);
         player.m_data[AnimationStatus_t::Walk].emplace_back(2150, 563, 403, 500);
 
-        /*player.m_data[AnimationStatus_t::Melee].emplace_back(2739, 50, 350, 466);
-        player.m_data[AnimationStatus_t::Melee].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Melee].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Melee].emplace_back(,,,);
-
-        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);
-        player.m_data[AnimationStatus_t::Shoot].emplace_back(,,,);*/
-
         player.m_data[AnimationStatus_t::Jump].emplace_back(1126, 1298, 344, 365);
         player.m_data[AnimationStatus_t::Jump].emplace_back(1474, 1258, 283, 406);
         player.m_data[AnimationStatus_t::Jump].emplace_back(1802, 1218, 312, 376);
@@ -39,8 +29,6 @@ namespace {
         player.m_data[AnimationStatus_t::Shoot].emplace_back(539, 1260, 474, 482);
         player.m_data[AnimationStatus_t::Shoot].emplace_back(59, 1784, 465, 480);
         player.m_data[AnimationStatus_t::Shoot].emplace_back(535, 1788, 455, 480);
-        
-        //player.m_data[AnimationStatus_t::Hurt].emplace_back(,,,);
 
         player.m_data[AnimationStatus_t::Death].emplace_back(58,2413,195,286);
         player.m_data[AnimationStatus_t::Death].emplace_back(357,2438,243,250);
@@ -51,21 +39,6 @@ namespace {
         player.m_data[AnimationStatus_t::Death].emplace_back(50,3087,291,212);
         player.m_data[AnimationStatus_t::Death].emplace_back(393,3087,292,212);
         player.m_data[AnimationStatus_t::Death].emplace_back(727,3087,325,212);
-
-
-
-        /*player.m_data[AnimationStatus_t::Idle].emplace_back(20,232,51,81);
-
-        player.m_data[AnimationStatus_t::Walk].emplace_back(10,18,56,84);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(84,18,62,84);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(171,22,45,80);
-        player.m_data[AnimationStatus_t::Walk].emplace_back(239,18,55,84);
-
-        player.m_data[AnimationStatus_t::Jump].emplace_back(318,18,52,82);
-        //player.m_data[AnimationStatus_t::Jump].emplace_back(385,19,55,78);
-
-        player.m_data[AnimationStatus_t::Falling].emplace_back(462,19,56,83);*/
-
 
         return player;
     }
@@ -98,7 +71,7 @@ namespace {
 
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1002, 1680, 303, 173);
         shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1337, 1683, 300, 171);
-        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1700, 1717, 306, 117);
+        shootingEnemy.m_data[AnimationStatus_t::Death].emplace_back(1700, 1683, 306, 171);
         
 
         return shootingEnemy;
@@ -157,6 +130,8 @@ namespace {
         
         knightEnemyData.m_data[AnimationStatus_t::Hurt].emplace_back(10, 10, 108, 174);
 
+        knightEnemyData.m_data[AnimationStatus_t::Death].emplace_back(10, 10, 108, 174);
+
         return knightEnemyData;
     }
 
@@ -191,6 +166,7 @@ namespace {
 
         return door;
     }
+
     AnimationData hpGiftData() {
         auto hpGift = AnimationData{};
 
@@ -203,10 +179,9 @@ namespace {
 
         return hpGift;
     }
+
     AnimationData lifeGiftData() {
         auto lifeGift = AnimationData{};
-
-        //need to fix
 
         lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(892, 174, 627, 528);
         lifeGift.m_data[AnimationStatus_t::Idle].emplace_back(1719, 174, 627, 528);
@@ -219,62 +194,36 @@ namespace {
 
         return lifeGift;
     }
-    AnimationData bulletGiftData() {
-        auto bulletGift = AnimationData{};
-
-        //need to fix
-        bulletGift.m_data[AnimationStatus_t::Idle].emplace_back(9, 17, 314, 180);
-
-        return bulletGift;
-    }
 }
 //===========================
 Textures::Textures() {
     m_textures.resize(NUM_OF_TEXTURES);
+    m_BuildingsSprites.resize(NUM_OF_BUILDING);
     m_animationsData.resize(NUM_OF_ANIMATION);
 
-    if (!m_textures[PLAYER_T].loadFromFile("Player.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[WALL_T].loadFromFile("Wall.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[BOX_T].loadFromFile("Box.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[KEY_T].loadFromFile("Key.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[KNIGHT_ENEMY_T].loadFromFile("KnightEnemy.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[SHOOTER_ENEMY_T].loadFromFile("ShooterEnemy.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[BULLET_T].loadFromFile("Bullet.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[ELEVATOR_DOOR_T].loadFromFile("Elevator_Door.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[BACKGROUND_T].loadFromFile("BackGround.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[STAT_BACKGROUND_T].loadFromFile("StatBackGround.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[HP_GIFT_T].loadFromFile("HpGift.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[LIFE_GIFT_T].loadFromFile("LifeGift.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[BULLET_GIFT_T].loadFromFile("BulletGift.png")) {
-        throw std::runtime_error("Can't load file");
-    }
-    if (!m_textures[MenuBackGround].loadFromFile("MenuBackGround.png")) {
-        throw std::runtime_error("Can't load file");
-    }
+    openTexture(PLAYER_T, "Player.png");
+    openTexture(WALL_T, "Wall.png");
+    openTexture(BOX_T, "Box.png");
+    openTexture(KEY_T, "Key.png");
+    openTexture(KNIGHT_ENEMY_T, "ThiefEnemy.png");
+    openTexture(SHOOTER_ENEMY_T, "ShooterEnemy.png");
+    openTexture(BULLET_T, "Bullet.png");
+    openTexture(ELEVATOR_DOOR_T, "Elevator_Door.png");
+    openTexture(STAT_BACKGROUND_T, "StatBackGround.png");
+    openTexture(HP_GIFT_T, "HpGift.png");
+    openTexture(LIFE_GIFT_T, "LifeGift.png");
+    openTexture(BULLET_GIFT_T, "BulletGift.png");
+    openTexture(MENU_BACK_GROUND, "MenuBackGround.png");
+    openTexture(HOW_TO_PLAY_T, "HowToPlay.png");
+    openTexture(WIN_T, "Win.png");
+    openTexture(GAME_OVER_T, "GameOver.png");
+    openTexture(LEVEL_UP_T, "LevelUp.png");
+    openTexture(PAUSE_T, "Pause.png");
+
+    openBuildingTexture(FirstHouse, "FirstHouse.png");
+    openBuildingTexture(SecondHouse, "SecondHouse.png");
+    openBuildingTexture(ThirdHouse, "ThirdHouse.png");
+    openBuildingTexture(Room, "RoomBackGround.png");
 
 
     m_animationsData[PLAYER_D] = playerData();
@@ -285,7 +234,6 @@ Textures::Textures() {
     m_animationsData[DOOR_D] = doorData();
     m_animationsData[HP_GIFT_D] = hpGiftData();
     m_animationsData[LIFE_GIFT_D] = lifeGiftData();
-    m_animationsData[BULLET_GIFT_D] = bulletGiftData();
 }
 //=============================================================================
 Textures& Textures::texturesObject() {
@@ -294,11 +242,15 @@ Textures& Textures::texturesObject() {
     return texturesObject;
 }
 //=============================================================================
-const sf::Texture& Textures::getTexture(enum Textures_t image) {
-    return m_textures[image];
+void Textures::openTexture(Textures_t pos,const std::string & name) {
+    if (!m_textures[pos].loadFromFile(name)) {
+        throw std::runtime_error(name + " is missing");
+    }
 }
 //=============================================================================
-const sf::Sprite Textures::getSprite(enum Textures_t image) {
-    return sf::Sprite(m_textures[image]);
+void Textures::openBuildingTexture(BuildingBackGround_t pos, const std::string & name) {
+    if (!m_BuildingsSprites[pos].loadFromFile(name)) {
+        throw std::runtime_error(name + " is missing");
+    }
 }
 //=============================================================================

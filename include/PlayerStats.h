@@ -7,14 +7,18 @@
 #include "Textures.h"
 #include "Font.h"
 
+// A class that responsible to show information about player's stats.
+
 class PlayerStats {
 public:
+    //----------Constructors\Destructors Section----------
 	PlayerStats();
+
+    //----------Functions Section----------
 	void keyCollected();
 
 	int getLives() const { return m_lives.first; }
-	int getHP() const { return m_lives.second; }
-	int getKeys()const { return m_keyCollected; }
+
 	void addScore(const int);
 	void decreaseHP(const int);
 	void increaseHP();

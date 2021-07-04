@@ -1,5 +1,4 @@
 #include "ShooterEnemy.h"
-#include "Factory.h"
 
 // Registers the ShooterEnemy object to the objects factory.
 
@@ -14,25 +13,29 @@ ShooterEnemy::ShooterEnemy(const sf::Vector2f& pos, b2World& world, const sf::Ve
           std::make_unique<Animation>(Textures::texturesObject().animationData(SHOOTER_ENEMY_D),
                                       AnimationStatus_t::Walk,
                                       getSprite(), dimension)) {
-    m_weapon.setFireRate(0.7f);
-    m_weapon.setBulletVelocity(6);
+    m_weapon.setFireRate(ENEMY_FIRE_RATE);
+    m_weapon.setBulletVelocity(ENEMY_BULLET_VELOCITY);
 }
 //=============================================================================
 AnimationStatus_t ShooterEnemy::move(sf::Vector2f playerPosition) {
 
     b2Vec2 desiredVel(0, 0);
-    if (getPos().y - playerPosition.y > -10 && getPos().y - playerPosition.y < 10 &&
-        (getPos().x - playerPosition.x < 300 && getPos().x - playerPosition.x > -300)) {
-        Sounds::soundObject().playSound(Sounds_t::SHOOT_SOUND);
-        m_weapon.shoot(getPos(), *getBody()->GetWorld(), FindDirectionToShoot(playerPosition));
-        desiredVel.x = 0;
+
+    // Checks if the position of the player relative to the enemy is in the define shooting range.
+    if (getPos().y - playerPosition.y > -PLAYER_ENEMY_RANGE && getPos().y - playerPosition.y < PLAYER_ENEMY_RANGE &&
+        (getPos().x - playerPosition.x < SHOOTING_RANGE && getPos().x - playerPosition.x > -SHOOTING_RANGE)) {
+
+        // While the enemy is alive he can shoot the player.
+        if (getMovement() != AnimationStatus_t::Death) {
+            m_weapon.shoot(getPos(), *getBody()->GetWorld(), FindDirectionToShoot(playerPosition));
+            Sounds::soundObject().playSound(Sounds_t::SHOOT_SOUND);
+        }
     }
+    // Determent the direction of the enemy.
     else if (getBody()->GetLinearVelocity().x >= 0)
-        desiredVel.x = 2;
-
+        desiredVel.x = ENEMY_VELOCITY;
     else
-        desiredVel.x = -2;
-
+        desiredVel.x = -ENEMY_VELOCITY;
 
     m_weapon.bulletCheck();
     setDirection(desiredVel);
@@ -49,3 +52,4 @@ void ShooterEnemy::draw(sf::RenderWindow& window,sf::Time deltaTime) {
     MovingObject::draw(window, deltaTime);
     m_weapon.drawBullet(window, deltaTime);
 }
+//=============================================================================

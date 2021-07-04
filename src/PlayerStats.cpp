@@ -10,8 +10,11 @@ void PlayerStats::addScore(const int score) {
 //=============================================================================
 void PlayerStats::decreaseHP(const int hitPoint) {
     m_lives.second -= hitPoint;
+
     if(m_lives.second <= 0) {
         --m_lives.first;
+        if(m_lives.first < 0)
+            m_lives.second = 0;
         if(m_lives.first > 0)
             m_lives.second = START_HP;
     }
@@ -20,7 +23,7 @@ void PlayerStats::decreaseHP(const int hitPoint) {
 void PlayerStats::increaseHP()
 {
     m_lives.second += HP_INCREASE;
-    ;
+
     if (m_lives.second > START_HP)
         m_lives.second = START_HP;
 }
@@ -38,6 +41,8 @@ void PlayerStats::keyCollected(){
 }
 //=============================================================================
 void PlayerStats::display(sf::RenderWindow& window){
+
+    // Draw the stats of the player on the screen.
 
     auto statBackGround = sf::RectangleShape({window.getView().getSize().x, CHARACTER_SIZE});
     statBackGround.setPosition(window.getView().getCenter().x - (window.getView().getSize().x / 2),

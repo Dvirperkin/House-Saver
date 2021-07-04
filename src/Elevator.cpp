@@ -1,5 +1,4 @@
 #include "Elevator.h"
-#include "Factory.h"
 
 //=============================================================================
 Elevator::Elevator(const sf::Vector2f & pos, b2World & world, const sf::Vector2f& dimension) :
@@ -10,13 +9,15 @@ Elevator::Elevator(const sf::Vector2f & pos, b2World & world, const sf::Vector2f
     setUserData();
 }
 //=============================================================================
-b2Vec2 Elevator::getElevatorDestinationUp() const{
+std::optional<b2Vec2> Elevator::getElevatorDestinationUp() const{
     if (m_destinationUP)
         return m_destinationUP->getBodyPos();
+    return {};
 }
 //=============================================================================
-b2Vec2 Elevator::getElevatorDestinationDown() const {
+std::optional<b2Vec2> Elevator::getElevatorDestinationDown() const {
     if (m_destinationDown)
         return m_destinationDown->getBodyPos();
+    return {};
 }
 //=============================================================================

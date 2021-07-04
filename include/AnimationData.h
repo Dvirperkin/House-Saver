@@ -6,8 +6,11 @@
 
 #include "Macros.h"
 
-// That struct create an unordered map of  animation vectors
-// with there type as key in the map
+
+// That struct include an unordered map of IntRect vector in the value,
+// that indicates all the position of the sprites in the sprites sheet.
+// The key of the map is the type of the animation.
+
 struct AnimationData
 {
     using ListType = std::vector<sf::IntRect>;

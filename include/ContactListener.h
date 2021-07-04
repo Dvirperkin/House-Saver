@@ -1,13 +1,11 @@
 #pragma once
 
 #include "box2d/box2d.h"
+#include "Macros.h"
+
 #include "Player.h"
-#include "Enemy.h"
-#include "Elevator.h"
-#include "Key.h"
-#include "HpGift.h"
-#include "BulletGift.h"
-#include "LifeGift.h"
+
+// A class that handle with collisions in the physical world.
 
 class ContactListener : public b2ContactListener{
 public:
@@ -20,5 +18,6 @@ private:
     void playerEndContact(Player *, GameObject *);
 
     void enemyStartContact(Enemy *, GameObject *);
-    void enemyEndContact(Enemy *, GameObject *);
+
+    void bulletStartContact(Bullet *, GameObject *);
 };

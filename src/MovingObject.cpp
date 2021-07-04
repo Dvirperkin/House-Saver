@@ -26,6 +26,7 @@ void MovingObject::moveY(float desiredVelY) {
 }
 //=============================================================================
 Side_t MovingObject::opposite(enum Side_t side) {
+
     if(side != m_side) {
         getSprite().scale(-1, 1);
         m_side = side;

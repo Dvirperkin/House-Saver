@@ -1,5 +1,5 @@
 #include "ContactListener.h"
-#include "Door.h"
+
 
 void ContactListener::BeginContact(b2Contact *contact) {
 
@@ -14,10 +14,12 @@ void ContactListener::BeginContact(b2Contact *contact) {
             case PLAYER:
                 playerStartContact(static_cast<Player *>(bodyUserDataA), gameObjectB);
                 return;
-            case KNIGHT_ENEMY:
+            case THIEF_ENEMY:
             case SHOOTER_ENEMY:
                 enemyStartContact(static_cast<Enemy *>(bodyUserDataA), gameObjectB);
                 return;
+            case BULLET:
+                bulletStartContact(static_cast<Bullet *>(bodyUserDataA), gameObjectB);
             default:
                 break;
         }
@@ -26,10 +28,13 @@ void ContactListener::BeginContact(b2Contact *contact) {
             case PLAYER:
                 playerStartContact(static_cast<Player *>(bodyUserDataB), gameObjectA);
                 return;
-            case KNIGHT_ENEMY:
+            case THIEF_ENEMY:
             case SHOOTER_ENEMY:
                 enemyStartContact(static_cast<Enemy *>(bodyUserDataB), gameObjectA);
                 return;
+            case BULLET:
+                bulletStartContact(static_cast<Bullet *>(bodyUserDataB), gameObjectA);
+
             default:
                 break;
         }
@@ -77,7 +82,7 @@ void ContactListener::playerStartContact(Player * player, GameObject * gameObjec
         case LIFE_GIFT:
             player->startContact(static_cast<LifeGift *>(gameObject));
             break;
-        case KNIGHT_ENEMY:
+        case THIEF_ENEMY:
         case SHOOTER_ENEMY:
             player->startContact(static_cast<Enemy *>(gameObject));
             break;
@@ -114,13 +119,16 @@ void ContactListener::enemyStartContact(Enemy * enemy, GameObject * gameObject) 
             static_cast<Player *>(gameObject)->startContact(enemy);
             break;
         case BULLET:
-            auto bullet = static_cast<Bullet*>(gameObject);
             enemy->startContact(static_cast<Bullet *>(gameObject));
             break;
     }
 }
 //=============================================================================
-void ContactListener::enemyEndContact(Enemy * enemy, GameObject * gameObject) {
-
+void ContactListener::bulletStartContact(Bullet * bullet, GameObject * gameObject) {
+    switch (gameObject->getBodyType()) {
+        case WALL:
+        case BOX:
+            bullet->hit();
+    }
 }
 //=============================================================================

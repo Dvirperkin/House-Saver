@@ -2,21 +2,24 @@
 
 #include "MovingObject.h"
 
-#include <iostream>
+// A class that represent a bullet.
 
-class Enemy;
 class Bullet : public MovingObject{
 public:
-    Bullet(const sf::Vector2f &, b2World &, const sf::Vector2f &, const Side_t &, const float &, const float &,const int);
+    //--------------------Constructor/Destructor Section--------------------
+    Bullet(const sf::Vector2f &, b2World &, const sf::Vector2f &, const Side_t &,
+           const float &, const float &,const int);
+
+    //--------------------Functions Section--------------------
     Objects_t getBodyType()const override { return BULLET; }
-    bool shoot();
-    void hit() { m_disposed = true; }
     float getHit() const { return m_hitPoint;}
+    void hit() { m_disposed = true; }
+    bool shoot();
 
 private:
+    sf::Clock m_clock;
     bool m_disposed = false;
     float m_hitPoint;
-    float m_desiredVel = 5;
+    float m_desiredVel;
     Side_t m_sideToShoot;
-    sf::Clock m_clock;
 };

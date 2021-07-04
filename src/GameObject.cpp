@@ -26,11 +26,32 @@ void GameObject::setPos(const sf::Vector2f & pos) {
 }
 //=============================================================================
 void GameObject::rigidBody(b2World & world, const b2Vec2 & pos,
-                            const b2FixtureDef & fixtureDef, const b2BodyType bodyType) {
+                            enum Shape_t shape, float size, float density, float friction, float groupIndex,
+                                    float restitution, bool sensor, const b2BodyType bodyType) {
     b2BodyDef bodyDef;
     bodyDef.type = bodyType;
     bodyDef.position.Set(pos.x, pos.y);
     m_body = world.CreateBody(&bodyDef);
+
+    b2FixtureDef fixtureDef;
+    b2CircleShape circleShape;
+    b2PolygonShape polygonShape;
+
+    if (shape == Shape_t::CIRCLE_SHAPE) {
+        circleShape.m_radius = size - b2_polygonRadius;
+        fixtureDef.shape = &circleShape;
+    }
+    else if (shape == Shape_t::POLYGON_SHAPE) {
+        polygonShape.SetAsBox(size - b2_polygonRadius, size - b2_polygonRadius);
+        fixtureDef.shape = &polygonShape;
+    }
+
+    fixtureDef.density = density;
+    fixtureDef.friction = friction;
+    fixtureDef.isSensor = sensor;
+    fixtureDef.restitution = restitution;
+    fixtureDef.filter.groupIndex = groupIndex;
+
     m_body->CreateFixture(&fixtureDef);
 
 }
@@ -42,6 +63,8 @@ void GameObject::setRotation() {
 void GameObject::update(sf::Time deltaTime, const sf::Vector2f & dimension) {
     if(m_animation)
         m_animation->update(deltaTime);
+
+    // Updates sprite position according to position in the physical world.
 
     auto position = getBodyPos();
     position.x *= WINDOW_SIZE.first / dimension.x;

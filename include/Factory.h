@@ -2,19 +2,10 @@
 
 #include <memory>
 
+#include "box2d/box2d.h"
 #include "Macros.h"
-#include "Player.h"
-#include "Box.h"
-#include "Key.h"
-#include "Wall.h"
-#include "Bullet.h"
-#include "Elevator.h"
-#include "KnightEnemy.h"
-#include "BulletGift.h"
-#include "HpGift.h"
-#include "LifeGift.h"
 
-// A class that implement factory for creating game objects.
+// A template class that implement factory for creating game objects.
 
 template <typename T>
 class Factory {
@@ -36,13 +27,13 @@ private:
 template<typename T>
 std::shared_ptr<T> Factory<T>::create(const char & name, const sf::Vector2f & pos, b2World & world,
                                       const sf::Vector2f & dimension) {
+
     // Checks if the request object is registered to the factory.
     auto it = Factory::getMap().find(name);
     if(it == Factory::getMap().end())
         return nullptr;
     return it->second(pos, world, dimension);
 }
-
 //=============================================================================
 template<typename T>
 bool Factory<T>::registerObject(const char & name, Factory::pFnc func) {

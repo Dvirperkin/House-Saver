@@ -1,7 +1,7 @@
 #include "Weapon.h"
 
-Weapon::Weapon(const sf::Vector2f & dimension,const int toHit):m_fireRate(START_FIRE_RATE),m_toHit(toHit),
-                                            m_bulletDamage(START_BULLET_DAMAGE), m_dimension(dimension){}
+Weapon::Weapon(const sf::Vector2f & dimension, const int toHit) : m_fireRate(FIRE_RATE), m_toHit(toHit),
+                                                                  m_bulletDamage(START_BULLET_DAMAGE), m_dimension(dimension){}
 //===============================================================
 void Weapon::shoot(sf::Vector2f pos, b2World & world, Side_t side){
 
@@ -13,15 +13,11 @@ void Weapon::shoot(sf::Vector2f pos, b2World & world, Side_t side){
     } 
 }
 //===============================================================
-void Weapon::setFireRate(const float& fireRate){
+void Weapon::setFireRate(const float & fireRate){
     m_fireRate = fireRate;
 }
 //===============================================================
-void Weapon::setBulletDamage(const float & bulletDamage){
-    m_bulletDamage = bulletDamage;
-}
-//===============================================================
-void Weapon::setBulletVelocity(const float& bulletVelocity){
+void Weapon::setBulletVelocity(const float & bulletVelocity){
     m_bulletVelocity = bulletVelocity;
 }
 //===============================================================
@@ -34,15 +30,14 @@ void Weapon::bulletCheck(){
     }
 }
 //===============================================================
-void Weapon::drawBullet(sf::RenderWindow& window, sf::Time deltaTime) {
+void Weapon::drawBullet(sf::RenderWindow & window, sf::Time deltaTime) {
     for (auto& bullet : m_bullets) {
         bullet->draw(window, deltaTime);
         bullet->update(deltaTime, m_dimension);
     }
 }
 //===============================================================
-void Weapon::increaseBulletDamage()
-{
+void Weapon::increaseBulletDamage() {
     m_bulletDamage += 5;
 }
 //===============================================================

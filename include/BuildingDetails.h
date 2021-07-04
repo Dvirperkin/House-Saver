@@ -1,13 +1,17 @@
 #pragma once
 
-#include "PlayerStats.h"
-#include "Mission.h"
-
+// This struct holds information about building.
 struct BuildingDetails{
-    PlayerStats m_stats;
-    bool exit = false;
+
     bool m_allKeyCollected = false;
+
     bool m_killAllEnemy = false;
-    bool m_missionComplete = false;
+
+    bool m_allRoomComplete = false;
+
+    // Indicates if player is died.
     bool m_GameOver = false;
+
+    // Indicated if the player want to exit from the room.
+    bool exit = false;
 };

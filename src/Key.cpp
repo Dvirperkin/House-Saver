@@ -1,5 +1,4 @@
 #include "Key.h"
-#include "Factory.h"
 
 // Registers the Key object to the objects factory.
 

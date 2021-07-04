@@ -21,8 +21,7 @@ bool Door::isRoom() const{
     return false;
 }
 //=============================================================================
-bool Door::roomMissionComplete() const
-{
+bool Door::isRoomMissionComplete() const{
     if(m_building)
         return m_building->missionComplete();
 

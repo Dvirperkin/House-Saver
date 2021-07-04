@@ -38,7 +38,7 @@ void HousesFile::readBuilding(std::fstream & houseFile, enum Building_t building
     // Reads number of rooms if the current building is an house.
     if(building == Building_t::HOUSE) {
         if (!(stringStream >> numOfRooms)) {
-            throw std::invalid_argument("");
+            throw std::invalid_argument("Number of rooms must be a positive number");
         }
         m_rooms[m_currHouse].resize(numOfRooms);
         m_houses[m_currHouse].emplace_back(line);

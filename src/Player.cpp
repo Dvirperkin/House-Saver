@@ -1,30 +1,18 @@
 #include "Player.h"
-#include "Enemy.h"
-#include "Door.h"
-#include "Factory.h"
-
 
 //=========================================================================================
 Player::Player(const sf::Vector2f & pos, b2World & world, const sf::Vector2f & dimension, PlayerStats & playerStats) :
     MovingObject(Textures::texturesObject().getSprite(PLAYER_T), pos, world,dimension,
                  std::make_unique<Animation>(Textures::texturesObject().animationData(PLAYER_D),
-                                             AnimationStatus_t::Idle, getSprite(), dimension)),m_weapon(dimension, -2),
-                                             m_stats(playerStats){
+                                             AnimationStatus_t::Idle, getSprite(), dimension)), m_weapon(dimension, -2),
+                                             m_stats(playerStats) {
     b2Vec2 position(pos.x, pos.y);
 
-    b2CircleShape circleShape;
-    circleShape.m_radius = 0.48 - b2_polygonRadius;
-
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &circleShape;
-    fixtureDef.density = 2.f;
-    fixtureDef.friction = 0.f;
-    fixtureDef.filter.groupIndex = -2;
-
-    rigidBody(world, position, fixtureDef, b2_dynamicBody);
+    rigidBody(world, position, CIRCLE_SHAPE, MOVING_OBJECT_PHYSICAL_SIZE,
+              2.f, 0.f, -2, 0, false, b2_dynamicBody);
 
     setUserData();
-    //m_weapon.setBulletVelocity(8);
+
     setFixedRotation(true);
 }
 //=========================================================================================
@@ -33,11 +21,11 @@ void Player::move() {
     // Player Jump.
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)
         && m_movement != AnimationStatus_t::Jump && m_movement != AnimationStatus_t::Falling && m_movement != AnimationStatus_t::Shoot) {
+        Sounds::soundObject().playSound(Sounds_t::PLAYER_JUMP_SOUND);
         moveY(-DESIRED_VEL);
     }
     // Player walk left.
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-
         moveX(-DESIRED_VEL);
         m_side = opposite(Side_t::LEFT);
     }
@@ -95,9 +83,11 @@ sf::Keyboard::Key Player::use() {
             return sf::Keyboard::S;
         }
     }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
-        if (m_door)
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+        if (m_door) {
+            clock.restart();
             return sf::Keyboard::E;
+        }
     }
 
     clock.restart();
@@ -114,11 +104,15 @@ bool Player::isDead(){
 }
 //=========================================================================================
 void Player::startContact(Key * key) {
+    Sounds::soundObject().playSound(GIFT_SOUND);
     m_stats.keyCollected();
     key->take();
 }
 //=========================================================================================
 void Player::startContact(Enemy * enemy) {
+    if(enemy->getMovement() == AnimationStatus_t::Death)
+        return;
+
     m_stats.decreaseHP(enemy->getHit());
 }
 //=========================================================================================
@@ -134,14 +128,13 @@ void Player::startContact(Elevator * elevator) {
     m_elevator = elevator;
 }
 //=========================================================================================
-void Player::startContact(HpGift * gift)
-{
+void Player::startContact(HpGift * gift){
+    Sounds::soundObject().playSound(GIFT_SOUND);
     m_stats.increaseHP();
     gift->take();
 }
 //=========================================================================================
-void Player::startContact(BulletGift * gift)
-{
+void Player::startContact(BulletGift * gift){
     Sounds::soundObject().playSound(GIFT_SOUND);
     m_stats.addScore(SCORE_INCREASE);
     m_weapon.increaseBulletDamage();
@@ -149,12 +142,13 @@ void Player::startContact(BulletGift * gift)
 }
 //=========================================================================================
 void Player::startContact(Bullet* bullet) {
+    Sounds::soundObject().playSound(PLAYER_HURT_SOUND);
     m_stats.decreaseHP(bullet->getHit());
     bullet->hit();
 }
 //=========================================================================================
-void Player::startContact(LifeGift * gift)
-{
+void Player::startContact(LifeGift * gift){
+    Sounds::soundObject().playSound(GIFT_SOUND);
     m_stats.addScore(SCORE_INCREASE);
     m_stats.increaseLife();
     gift->take();
@@ -168,11 +162,6 @@ void Player::endContact(Door * door) {
 void Player::endContact(Elevator * elevator) {
     elevator->close();
     m_elevator = nullptr;
-}
-//=========================================================================================
-int Player::getKeyCollected() const
-{
-    return m_stats.getKeys();
 }
 //=========================================================================================
 void Player::draw(sf::RenderWindow & window, sf::Time deltaTime) {

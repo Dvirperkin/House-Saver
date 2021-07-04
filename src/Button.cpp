@@ -4,7 +4,7 @@ Button::Button(int position, std::string & text)
     : m_frame(sf::Vector2f(BUTTON_WIDTH, BUTTON_HEIGHT)), m_buttonText(text, Font::FontObject().getFont()){
 
     m_frame.setPosition(BUTTON_WIDTH, ((WINDOW_SIZE.second / 3) + (BUTTON_HEIGHT * position) + (50 * position)));
-    m_frame.setOutlineColor(GRAY);
+    m_frame.setOutlineColor(sf::Color::Transparent);
     m_frame.setFillColor(sf::Color::Transparent);
 
     m_buttonText.setCharacterSize(BUTTON_CHAR_SIZE);
@@ -28,8 +28,11 @@ void Button::draw(sf::RenderWindow & window) const{
     window.draw(m_buttonText);
 }
 //=============================================================================
-void Button::setOutlineThickness(int thickness) {
-    m_frame.setOutlineThickness(thickness);
+void Button::setCharacterColor(const bool status) {
+    if(status)
+        m_buttonText.setOutlineColor(sf::Color::Red);
+    else
+        m_buttonText.setOutlineColor(sf::Color::White);
 }
 //=============================================================================
 sf::Vector2f Button::getPosition() const{
@@ -38,5 +41,9 @@ sf::Vector2f Button::getPosition() const{
 //=============================================================================
 sf::FloatRect Button::getGlobalBound() const {
     return m_frame.getGlobalBounds();
+}
+//=============================================================================
+void Button::setString(const std::string & str){
+    m_buttonText.setString(str);
 }
 //=============================================================================

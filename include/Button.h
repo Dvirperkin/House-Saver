@@ -1,6 +1,8 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include <string>
+
 #include "Macros.h"
 #include "Font.h"
 
@@ -17,8 +19,10 @@ public:
     sf::Vector2f getPosition() const;
     sf::FloatRect getGlobalBound() const;
 
+	void setString(const std::string& str);
+
     //--------------------Set Function Section--------------------
-    void setOutlineThickness(int);
+    void setCharacterColor(const bool);
 
 private:
     sf::RectangleShape m_frame;
